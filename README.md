@@ -11,7 +11,6 @@ This workspace contains:
 cd backend
 npm install
 cp .env.example .env
-# set HF_API_KEY (optional; backend will fall back to heuristic mode)
 npm run dev
 ```
 
@@ -59,5 +58,3 @@ In `backend/.env`:
 - **HF base URL**: `HF_BASE_URL` (default `https://router.huggingface.co/v1`)
 - **HF model**: `HF_MODEL` (default `Qwen/Qwen2.5-7B-Instruct`)
 - **Debug mode**: `LLM_DEBUG=1` (backend will include `debug.llm_error` in responses when it falls back)
-
-
