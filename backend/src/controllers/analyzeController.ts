@@ -1,6 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import { z } from "zod";
 import { cleanPostText } from "../utils/cleanPostText.ts";
+import { analyzeText } from "../services/analyzeService.ts";
 
 const AnalyzeBody = z.object({
   text: z.string().min(1),
@@ -23,7 +24,8 @@ export async function analyzeController(
     if (!text)
       return res.status(400).json({ error: "Text is empty after cleaning." });
 
-    return res.json({ ok: true });
+    const analysis = await analyzeText(text);
+    return res.json(analysis);
   } catch (err) {
     return next(err);
   }
