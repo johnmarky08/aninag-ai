@@ -1,11 +1,21 @@
-# Aninag MVP (Misleading-claim indicator)
+# ANINAG AI - Extension + Backend
 
-This workspace contains:
+This is a Chrome extension with a Svelte frontend UI and Node.js/Express backend for AI-powered analysis.
 
-- `backend/`: Node.js + Express API (`POST /analyze`) with an LLM-backed analyzer.
-- `extension/`: Chrome Extension (Manifest v3) that detects social posts, adds a small indicator button, and shows quick + full analytics.
+## Project Structure
 
-## Backend (local dev)
+- **`backend/`**: Node.js + Express API with LLM integration
+  - `POST /analyze` endpoint for text analysis
+  - TypeScript-based controllers, services, and utilities
+
+- **`extension/`**: Chrome Extension (Manifest v3)
+  - **`frontend/`**: Svelte + Tailwind UI (builds to `dist/`)
+  - **`content.js`**: Injects the frontend into webpages
+  - **`manifest.json`**: Extension configuration
+
+## Quick Start
+
+### Backend Setup
 
 ```bash
 cd backend
@@ -16,45 +26,55 @@ npm run dev
 
 Backend runs on `http://localhost:3001`.
 
-## Chrome extension (load unpacked)
+### Extension Frontend Setup
+
+```bash
+cd extension/frontend
+npm install
+npm run build
+```
+
+This generates the dist folder at `extension/dist/` with compiled assets.
+
+### Load Extension in Chrome
 
 1. Open Chrome → `chrome://extensions`
-2. Enable **Developer mode**
+2. Enable **Developer mode** (top-right toggle)
 3. Click **Load unpacked** → select the `extension/` folder
-4. Open X / Facebook (or any site with article-like posts) and scroll.
+4. Visit any webpage to see the ANINAG AI panel (bottom-right corner)
 
-## Configure backend URL
+## Frontend Build
 
-Edit `extension/background.js` and change:
+The frontend uses Vite to build a Svelte app that gets injected into webpages via `content.js`.
 
-- `BACKEND_URL` (default `http://localhost:3001/analyze`)
+**Build output**: `extension/dist/` (configured in `extension/frontend/vite.config.js`)
 
-## Customization options
+- `dist/assets/index.js` - Main app bundle
+- `dist/assets/index.css` - Styles
+- `dist/index.html` - HTML template
 
-### Extension badge + tooltip
+**Key configuration**:
 
-In `extension/content.js` (top of file):
+- Vite outputs to `../dist` (relative to `frontend/` folder)
+- Filenames are stable (`index.js`, `index.css`) to avoid hardcoding hashes
+- Web-accessible resources declared in `manifest.json`
 
-- **Badge label**: `BADGE_TEXT`
-- **Badge size**: `BADGE_SIZE_PX`
-- **Badge colors**: `BADGE_BG`, `BADGE_FG`, `BADGE_BORDER`
-- **Max text sent to backend**: `MAX_INPUT_CHARS`
-- **Tooltip summary length**: `MAX_TOOLTIP_CHARS`
-- **Client-side cache TTL**: `CACHE_TTL_MS`
-- **Facebook DOM debug logs**: `DEBUG_FB_LOG`
-- **Badge placement**: `BADGE_PLACEMENT` (`"start"` or `"end"`)
+## Development Workflow
 
-In `extension/background.js`:
+1. **Edit frontend code**: `extension/frontend/src/`
+2. **Rebuild**: `npm run build` from `extension/frontend/`
+3. **Reload extension**: Chrome → `chrome://extensions` → reload button
+4. **Test**: Visit a webpage to see changes
 
-- **Backend URL**: `BACKEND_URL`
-- **Backend request timeout**: `REQUEST_TIMEOUT_MS`
-- **Cross-tab cache TTL**: `CACHE_TTL_MS`
+## Environment Variables
 
-### Backend LLM provider
+### Backend (`backend/.env`)
 
-In `backend/.env`:
+- `HF_API_KEY` - Hugging Face API key
+- `HF_BASE_URL` - Hugging Face API endpoint (default: `https://router.huggingface.co/v1`)
+- `HF_MODEL` - LLM model name (default: `Qwen/Qwen2.5-7B-Instruct`)
+- `LLM_DEBUG` - Enable LLM debug logs (`1` to enable)
 
-- **Hugging Face key**: `HF_API_KEY`
-- **HF base URL**: `HF_BASE_URL` (default `https://router.huggingface.co/v1`)
-- **HF model**: `HF_MODEL` (default `Qwen/Qwen2.5-7B-Instruct`)
-- **Debug mode**: `LLM_DEBUG=1` (backend will include `debug.llm_error` in responses when it falls back)
+## Extension Configuration
+
+The extension is ready to use. All assets are web-accessible and will be injected via `content.js` into every webpage.

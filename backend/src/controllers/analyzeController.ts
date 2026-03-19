@@ -25,6 +25,7 @@ export async function analyzeController(
       return res.status(400).json({ error: "Text is empty after cleaning." });
 
     const analysis = await analyzeText(text);
+    console.log("Analysis result:", analysis);
     return res.json(analysis);
   } catch (err) {
     return next(err);
