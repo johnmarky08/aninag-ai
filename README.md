@@ -8,8 +8,10 @@ This is a Chrome extension with a Svelte frontend UI and Node.js/Express backend
   - `POST /analyze` endpoint for text analysis
   - TypeScript-based controllers, services, and utilities
 
+- **`frontend/`**: Svelte + Tailwind UI
+  - Builds to `extension/dist/`
+
 - **`extension/`**: Chrome Extension (Manifest v3)
-  - **`frontend/`**: Svelte + Tailwind UI (builds to `dist/`)
   - **`content.js`**: Injects the frontend into webpages
   - **`manifest.json`**: Extension configuration
 
@@ -29,7 +31,7 @@ Backend runs on `http://localhost:3001`.
 ### Extension Frontend Setup
 
 ```bash
-cd extension/frontend
+cd frontend
 npm install
 npm run build
 ```
@@ -47,7 +49,7 @@ This generates the dist folder at `extension/dist/` with compiled assets.
 
 The frontend uses Vite to build a Svelte app that gets injected into webpages via `content.js`.
 
-**Build output**: `extension/dist/` (configured in `extension/frontend/vite.config.js`)
+**Build output**: `extension/dist/` (configured in `frontend/vite.config.js`)
 
 - `dist/assets/index.js` - Main app bundle
 - `dist/assets/index.css` - Styles
@@ -55,14 +57,14 @@ The frontend uses Vite to build a Svelte app that gets injected into webpages vi
 
 **Key configuration**:
 
-- Vite outputs to `../dist` (relative to `frontend/` folder)
+- Vite outputs to `../extension/dist` (relative to `frontend/` folder)
 - Filenames are stable (`index.js`, `index.css`) to avoid hardcoding hashes
 - Web-accessible resources declared in `manifest.json`
 
 ## Development Workflow
 
-1. **Edit frontend code**: `extension/frontend/src/`
-2. **Rebuild**: `npm run build` from `extension/frontend/`
+1. **Edit frontend code**: `frontend/src/`
+2. **Rebuild**: `npm run build` from `frontend/`
 3. **Reload extension**: Chrome → `chrome://extensions` → reload button
 4. **Test**: Visit a webpage to see changes
 

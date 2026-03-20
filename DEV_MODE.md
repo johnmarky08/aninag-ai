@@ -49,7 +49,7 @@ ren manifest.json.prod manifest.json
 
 #### 3. Start Designing
 
-Edit files in `extension/frontend/src/` and watch changes appear **instantly** in your browser! 🎨
+Edit files in `frontend/src/` and watch changes appear **instantly** in your browser! 🎨
 
 ### How It Works
 
@@ -66,12 +66,12 @@ extension/
 ├── manifest-dev.json      ← Development manifest (loads from localhost)
 ├── content.js             ← Production script
 ├── content-dev.js         ← Development script (loads from dev server)
-├── frontend/
-│   ├── vite.config.js     ← Configured for dev server
-│   ├── src/
-│   │   ├── App.svelte     ← Your main component
-│   │   ├── main.js
-│   │   └── ...
+frontend/
+├── vite.config.js         ← Configured for dev server + extension output
+├── src/
+│   ├── App.svelte         ← Your main component
+│   ├── main.js
+│   └── ...
 ```
 
 ### Build for Production
@@ -79,7 +79,7 @@ extension/
 When ready to deploy:
 
 ```bash
-npm run build --prefix extension/frontend
+npm run build --prefix frontend
 ```
 
 This generates optimized files in `extension/dist/` ready for distribution.

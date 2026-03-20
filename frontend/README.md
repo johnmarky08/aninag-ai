@@ -24,13 +24,13 @@ Runs Vite dev server on `http://localhost:5173`.
 npm run build
 ```
 
-**Output**: Builds to `../dist/` with these files:
+**Output**: Builds to `../extension/dist/` with these files:
 
 - `dist/assets/index.js` - Main Svelte app bundle
 - `dist/assets/index.css` - Compiled Tailwind styles
 - `dist/index.html` - HTML template
 
-> The build output location is configured in `vite.config.js` to output at `../dist` (the extension folder).
+> The build output location is configured in `vite.config.js` to output at `../extension/dist` (the extension folder).
 
 ### Preview Build
 
@@ -48,7 +48,7 @@ npm run preview
 ## Key Files
 
 - `vite.config.js` - Vite & Rollup configuration
-  - Outputs to `../dist`
+  - Outputs to `../extension/dist`
   - Stable filenames: `index.js`, `index.css` (no hash suffixes)
 - `svelte.config.js` - Svelte compiler options
 - `tailwind.config.cjs` - Tailwind CSS configuration

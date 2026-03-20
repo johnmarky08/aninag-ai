@@ -31,7 +31,7 @@ async function bootstrapDev() {
     console.log("Connected to dev server at http://localhost:5173");
   } catch (error) {
     console.error(
-      "Failed to load from dev server. Make sure to run 'npm run dev' in extension/frontend",
+      "Failed to load from dev server. Make sure to run 'npm run dev' in frontend",
       error,
     );
   }

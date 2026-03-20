@@ -21,7 +21,6 @@ export default defineConfig({
         assetFileNames: "assets/[name][extname]",
       },
     },
-    outDir: "../dist",
+    outDir: "../extension/dist",
   },
- 
 });
