@@ -3,15 +3,12 @@
   import * as img from "../imageHandler.js";
   import {
     showFullAnalysis,
-    toggleFullAnalysis,
     verificationLevel,
     setupOutsideClick,
   } from "../Utilities.js";
   import { fly, slide } from "svelte/transition";
   import BezierEasing from "bezier-easing";
-  import { posX, posY, minimize } from "../Utilities.js";
-  import * as data from "../Datas.js";
-  import { analysisConfidence } from "../State.js";
+  import { analysisConfidence, analysis } from "../State.js";
 
   const myEasing = BezierEasing(0.34, 1.4, 0.64, 1);
 
@@ -39,30 +36,23 @@
   $: headerBgClass =
     $verificationLevel === "Verified"
       ? "bg-[#29A37A]"
-      : $verificationLevel === "Flagged"
+      : $verificationLevel === "Likely Misleading"
         ? "bg-[#F5DD0A]"
         : "bg-[#E21D48]";
 
   $: fullAnalysisBadgeBgClass =
     $verificationLevel === "Verified"
       ? "bg-[#29A37A]/20"
-      : $verificationLevel === "Flagged"
+      : $verificationLevel === "Likely Misleading"
         ? "bg-[#F5DD0A]/20"
         : "bg-[#E21D48]/20";
-
-  $: verificationText =
-    $verificationLevel === "Verified"
-      ? "Verified by multiple official sources. Content aligns with DOH and WHO guidelines"
-      : $verificationLevel === "Flagged"
-        ? "Why it may be true: Ginger has documented anti-inflammatory properties and can soothe sore throats. Why it may not be true: No clinical evidence that ginger tea cures any virus. WHO warns against unverified remedies."
-        : "Completely fabricated";
 
   $: contentBadgeTitle =
     $verificationLevel === "Verified"
       ? "Verified Content"
-      : $verificationLevel === "Flagged"
-        ? "Flagged Content"
-        : "Warning Content";
+      : $verificationLevel === "Likely Misleading"
+        ? "Likely Misleading Content"
+        : "Fake Content";
 </script>
 
 {#if $showFullAnalysis}
@@ -118,7 +108,7 @@
             ></div>
           </div>
           <div id="VerificationText" class="mt-2 text-sm text-[#1F2329]">
-            {#if $verificationLevel !== "Flagged"}
+            {#if $verificationLevel !== "Likely Misleading"}
               <div class="flex items-center gap-2">
                 <span
                   class="text-base font-semibold {$verificationLevel ===
@@ -128,37 +118,7 @@
                 >
                   {$verificationLevel === "Verified" ? "✓" : "✕"}
                 </span>
-                <p>{verificationText}</p>
-              </div>
-            {/if}
-
-            {#if $verificationLevel === "Flagged"}
-              <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <div class="space-y-1">
-                  <p
-                    class="flex items-center gap-2 text-base font-semibold text-[#29A37A]"
-                  >
-                    <span>✓</span>
-                    Why it may be true
-                  </p>
-                  <p class="pl-6 text-base leading-6 text-[#5C6576]">
-                    Ginger has documented anti-inflammatory properties and can
-                    soothe sore throats
-                  </p>
-                </div>
-
-                <div class="space-y-1">
-                  <p
-                    class="flex items-center gap-2 text-base font-semibold text-[#E21D48]"
-                  >
-                    <span>✕</span>
-                    Why it may not be true
-                  </p>
-                  <p class="pl-6 text-base leading-6 text-[#5C6576]">
-                    No clinical evidence that ginger tea cures any virus. WHO
-                    warns against unverified remedies.
-                  </p>
-                </div>
+                <p>{$analysis.validated_summary}</p>
               </div>
             {/if}
           </div>
@@ -202,8 +162,7 @@
               Narrative Context
             </h3>
             <p class="mt-1 text-sm text-[#6A7181]">
-              This narrative is current and officially backed by the Department
-              of Health as of March 2026
+              {$analysis.claim_summary}
             </p>
           </div>
         </div>
@@ -212,7 +171,7 @@
       <section class="space-y-2.5">
         <h2 class="text-lg font-semibold text-[#1F2329]">Trusted Sources</h2>
         <div class="space-y-3 overflow-y-scroll scroll-smooth max-h-64">
-          {#each data.trustedSources as { title, news, link, tag }, idx}
+          {#each $analysis.sources as { title, description, link, bias, snippet }, idx}
             <div
               class="rounded-2xl border border-[#E2E8F0] bg-white p-3 overflow-hidden transition-all duration-300 ease-in {activeDropdown ===
               idx
@@ -227,7 +186,7 @@
                     >
                       {title}
                     </h3>
-                    {#each tag as tags}
+                    {#each bias as tags}
                       <span
                         class="inline-flex items-center gap-1 rounded-full border border-[#D8DEE8] bg-[#F6F8FB] px-2 py-0.5 text-[10px] text-[#5C6576]"
                       >
@@ -274,7 +233,7 @@
                       <p
                         class="min-w-0 text-sm leading-5 text-[#6A7181] whitespace-normal break-words"
                       >
-                        {news}
+                        {description ?? snippet ?? "No description available."}
                       </p>
 
                       <div class="pt-1">
@@ -331,7 +290,7 @@
                       transition:slide={{ duration: 220 }}
                       class="min-w-0 truncate max-w-[440px] whitespace-nowrap text-sm leading-5 text-[#6A7181]"
                     >
-                      {news}
+                      {description ?? snippet ?? "No description available."}
                     </p>
                   {/if}
                 </div>
@@ -400,8 +359,7 @@
           <div>
             <h3 class="text-xs font-semibold text-[#1F2329]">Did you know?</h3>
             <p class="mt-1 text-xs text-[#6A7181]">
-              Tip: Always verify the date of official announcements to ensure
-              they are current
+              Tip: {$analysis.tip}
             </p>
           </div>
         </div>

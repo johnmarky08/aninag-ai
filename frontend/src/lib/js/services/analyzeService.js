@@ -1,5 +1,5 @@
 import { verificationLevel } from "../Utilities.js";
-import { claimsCheckedToday, analysisConfidence } from "../State.js";
+import { claimsCheckedToday, analysisConfidence, analysis } from "../State.js";
 
 const BACKEND_URL = "http://localhost:3001";
 
@@ -30,14 +30,8 @@ export async function analyzePost(text) {
     if (data.confidence !== undefined) {
       // Set confidence percentage (0-100)
       analysisConfidence.set(data.confidence);
-
-      if (data.confidence >= 70) {
-        verificationLevel.set("Verified");
-      } else if (data.confidence >= 40) {
-        verificationLevel.set("Flagged");
-      } else {
-        verificationLevel.set("Warning");
-      }
+      verificationLevel.set(data.verdict);
+      analysis.set(data); // Store full analysis result for UI display
     }
 
     // Increment the claims checked counter
@@ -48,14 +42,4 @@ export async function analyzePost(text) {
     console.error("analyzePost: Error calling backend", error);
     return null;
   }
-}
-
-export function setVerificationLevel(level) {
-  if (["Verified", "Flagged", "Warning"].includes(level)) {
-    verificationLevel.set(level);
-  }
-}
-
-export function getVerificationLevel() {
-  return verificationLevel;
 }

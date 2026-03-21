@@ -2,7 +2,7 @@
   import { onDestroy } from "svelte";
   import * as img from "../imageHandler.js";
   import { openFullAnalysis, verificationLevel } from "../Utilities.js";
-  import { onState, analysisConfidence } from "../State.js";
+  import { onState, analysisConfidence, analysis } from "../State.js";
 
   let showBadge = false;
   let showBadgeTimeout;
@@ -30,66 +30,61 @@
   $: badgeBgClass =
     $verificationLevel === "Verified"
       ? "bg-[#29A37A]"
-      : $verificationLevel === "Flagged"
+      : $verificationLevel === "Likely Misleading"
         ? "bg-[#F5DD0A]"
         : "bg-[#E21D48]";
 
   $: badgeTextColorClass =
-    $verificationLevel === "Flagged" ? "text-[#1F2329]" : "text-white";
+    $verificationLevel === "Likely Misleading"
+      ? "text-[#1F2329]"
+      : "text-white";
 
   $: accentTextClass =
     $verificationLevel === "Verified"
       ? "text-[#29A37A]"
-      : $verificationLevel === "Flagged"
+      : $verificationLevel === "Likely Misleading"
         ? "text-[#F5DD0A]"
         : "text-[#E21D48]";
 
   $: accentBorderClass =
     $verificationLevel === "Verified"
       ? "border-[#29A37A]"
-      : $verificationLevel === "Flagged"
+      : $verificationLevel === "Likely Misleading"
         ? "border-[#F5DD0A]"
         : "border-[#E21D48]";
 
   $: contentBgClass =
     $verificationLevel === "Verified"
       ? "bg-[#EAF8F2]"
-      : $verificationLevel === "Flagged"
+      : $verificationLevel === "Likely Misleading"
         ? "bg-[#FFF7D6]"
         : "bg-[#FDECEF]";
 
   $: contentBorderClass =
     $verificationLevel === "Verified"
       ? "border-[#BEE9D7]"
-      : $verificationLevel === "Flagged"
+      : $verificationLevel === "Likely Misleading"
         ? "border-[#F1DA83]"
         : "border-[#F5B7C5]";
 
   $: accentStroke =
     $verificationLevel === "Verified"
       ? "#29A37A"
-      : $verificationLevel === "Flagged"
+      : $verificationLevel === "Likely Misleading"
         ? "#F5DD0A"
         : "#E21D48";
 
   $: badgeText =
     $verificationLevel === "Verified"
       ? "Verified"
-      : $verificationLevel === "Flagged"
-        ? "Flagged"
-        : "Warning";
-
-  $: contentBadgeText =
-    $verificationLevel === "Verified"
-      ? "Matches official Department of Health statements and current public health advisories"
-      : $verificationLevel === "Flagged"
-        ? "Conflicts with standard medical consensus, but contains partial truths about ginger's soothing properties"
-        : "Debunked by COMELEC and major news networks. No official cancellation has been announced";
+      : $verificationLevel === "Likely Misleading"
+        ? "Likely Misleading"
+        : "Fake";
 
   $: ctaHoverClass =
     $verificationLevel === "Verified"
       ? "hover:bg-[#29A37A] hover:text-white"
-      : $verificationLevel === "Flagged"
+      : $verificationLevel === "Likely Misleading"
         ? "hover:bg-[#F5DD0A] hover:text-[#1F2329]"
         : "hover:bg-[#E21D48] hover:text-white";
 </script>
@@ -108,7 +103,9 @@
       <div
         id="contentBg"
         class="z-[2147483647] cursor-default opacity-0 invisible group-hover:visible group-hover:opacity-100 rounded-[10px] border absolute p-5 shadow-[0_12px_30px_rgba(15,23,42,0.18)] space-y-5 -translate-x-52 translate-y-8 transition-all duration-300 ease-in w-[320px] backdrop-blur-[2px] {contentBgClass} {contentBorderClass}"
-        style={isXPlatform ? "transform: translateX(calc(-208px - 5px)) translateY(32px);" : ""}
+        style={isXPlatform
+          ? "transform: translateX(calc(-208px - 5px)) translateY(32px);"
+          : ""}
       >
         <div class="flex justify-between items-center">
           <div
@@ -118,7 +115,7 @@
             <img
               src={$verificationLevel == "Verified"
                 ? img.sheild
-                : $verificationLevel == "Flagged"
+                : $verificationLevel == "Likely Misleading"
                   ? img.warningYellow
                   : img.warningRed}
               alt="Active"
@@ -133,7 +130,7 @@
         </div>
 
         <p id="ContentBadgeText" class="max-w-xs text-[#1F2329] leading-6">
-          {contentBadgeText}
+          {$analysis.validated_summary}
         </p>
         <div>
           <button

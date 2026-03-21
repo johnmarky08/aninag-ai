@@ -35,10 +35,17 @@ function buildFacebookReferences(posts) {
   const byId = {};
   const textRefs = [];
 
-  posts.forEach((post, index) => {
+  // build arrays and run all analyzes in parallel
+  const analyzePromises = posts.map((post, index) => {
     byId[post.id] = post;
-
     textRefs.push({ id: post.id, index, text: post.text });
+
+    // return the promise so Promise.all can wait for it
+    return window.aninagAnalyzePost(post.text);
+  });
+
+  Promise.all(analyzePromises).catch((err) => {
+    console.error("One or more analyses failed", err);
   });
 
   return {
@@ -122,10 +129,17 @@ function buildTwitterReferences(posts) {
   const byId = {};
   const textRefs = [];
 
-  posts.forEach((post, index) => {
+  // build arrays and run all analyzes in parallel
+  const analyzePromises = posts.map((post, index) => {
     byId[post.id] = post;
-
     textRefs.push({ id: post.id, index, text: post.text });
+
+    // return the promise so Promise.all can wait for it
+    return window.aninagAnalyzePost(post.text);
+  });
+
+  Promise.all(analyzePromises).catch((err) => {
+    console.error("One or more analyses failed", err);
   });
 
   return {
