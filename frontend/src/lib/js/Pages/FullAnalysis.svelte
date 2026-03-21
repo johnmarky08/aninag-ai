@@ -11,11 +11,11 @@
   import BezierEasing from "bezier-easing";
   import { posX, posY, minimize } from "../Utilities.js";
   import * as data from "../Datas.js";
+  import { analysisConfidence } from "../State.js";
 
   const myEasing = BezierEasing(0.34, 1.4, 0.64, 1);
 
   let activeDropdown = null;
-  let percentage = 98;
   let fullAnalysisEl;
   let cleanupOutsideClick;
 
@@ -107,11 +107,12 @@
         <div class="rounded-2xl border border-[#E2E8F0] bg-white p-3">
           <div class="h-2 w-full rounded-full bg-[#DCE8E3]">
             <div
-              class="h-2 rounded-full w-[{percentage}%] {percentage >= 70
+              style="width: {$analysisConfidence}%"
+              class="h-2 rounded-full {$analysisConfidence >= 70
                 ? 'bg-[#2FA47B]'
-                : percentage <= 69 && percentage >= 40
+                : $analysisConfidence <= 69 && $analysisConfidence >= 40
                   ? 'bg-[#F5DD0A]'
-                  : percentage <= 39 && percentage > 0
+                  : $analysisConfidence <= 39 && $analysisConfidence > 0
                     ? 'bg-[#E21D48]'
                     : 'bg-gray-300/50'} transition-all duration-500 ease-in-out"
             ></div>

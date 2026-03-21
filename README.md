@@ -68,6 +68,12 @@ The frontend uses Vite to build a Svelte app that gets injected into webpages vi
 3. **Reload extension**: Chrome → `chrome://extensions` → reload button
 4. **Test**: Visit a webpage to see changes
 
+## Current UI Behavior
+
+- The **Real Time Detection** toggle in the main popup controls whether feed badges are rendered.
+- When toggled **off**, badges are hidden and stop appearing.
+- When toggled **on/off**, badge visibility updates with a 300ms delay for both appearing and disappearing.
+
 ## Environment Variables
 
 ### Backend (`backend/.env`)

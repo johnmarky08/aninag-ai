@@ -7,10 +7,6 @@ function cleanText(value) {
   return (value || "").replace(/\s+/g, " ").trim();
 }
 
-function unique(values) {
-  return Array.from(new Set(values.filter(Boolean)));
-}
-
 function collectFacebookPost(article, index) {
   const textCandidates = [
     ...article.querySelectorAll('[data-ad-preview="message"]'),
@@ -22,25 +18,11 @@ function collectFacebookPost(article, index) {
   const fullText = cleanText(article.innerText);
   const text = textCandidates[0] || fullText;
 
-  const imageUrls = unique(
-    Array.from(article.querySelectorAll("img"))
-      .map((img) => img.src)
-      .filter((src) => src && !src.startsWith("data:")),
-  );
-
-  const videoUrls = unique(
-    Array.from(article.querySelectorAll("video"))
-      .map((video) => video.currentSrc || video.src || video.poster)
-      .filter(Boolean),
-  );
-
   const postId = article.getAttribute("data-ft") || `fb-post-${index}`;
 
   return {
     id: postId,
     text,
-    images: imageUrls,
-    videos: videoUrls,
     collectedAt: new Date().toISOString(),
     url: location.href,
   };
@@ -49,29 +31,17 @@ function collectFacebookPost(article, index) {
 function buildFacebookReferences(posts) {
   const byId = {};
   const textRefs = [];
-  const imageRefs = [];
-  const videoRefs = [];
 
   posts.forEach((post, index) => {
     byId[post.id] = post;
 
     textRefs.push({ id: post.id, index, text: post.text });
-
-    post.images.forEach((src, imageIndex) => {
-      imageRefs.push({ id: post.id, postIndex: index, imageIndex, src });
-    });
-
-    post.videos.forEach((src, videoIndex) => {
-      videoRefs.push({ id: post.id, postIndex: index, videoIndex, src });
-    });
   });
 
   return {
     posts,
     byId,
     textRefs,
-    imageRefs,
-    videoRefs,
     totalPosts: posts.length,
   };
 }
@@ -84,7 +54,7 @@ function scanFacebookPosts() {
   const posts = Array.from(document.querySelectorAll(FB_POST_SELECTOR));
   const result = posts
     .map((article, index) => collectFacebookPost(article, index))
-    .filter((post) => post.text || post.images.length || post.videos.length);
+    .filter((post) => post.text);
 
   window.__ANINAG_FB_POSTS__ = result;
   window.__ANINAG_FB_REFERENCES__ = buildFacebookReferences(result);
@@ -115,6 +85,8 @@ function initFacebookCollector() {
   scanFacebookPosts();
   window.aninagScanFacebookPosts = scanFacebookPosts;
   window.aninagExportFacebookPosts = exportFacebookPostsToJsFile;
+  window.aninagGetFacebookTextReferences = () =>
+    window.__ANINAG_FB_REFERENCES__?.textRefs || [];
   window.aninagGetFacebookPostById = (id) =>
     window.__ANINAG_FB_REFERENCES__?.byId?.[id] || null;
 
@@ -204,6 +176,11 @@ async function bootstrapProd() {
     if (typeof mountApp === "function") {
       mountApp(ensureRoot(), { embedded: false });
       mountBadgesOnFacebookMessages(mountApp);
+    }
+
+    // Expose analyze function globally for post analysis
+    if (appModule.analyzePost) {
+      window.aninagAnalyzePost = appModule.analyzePost;
     }
 
     initFacebookCollector();

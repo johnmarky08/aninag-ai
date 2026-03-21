@@ -21,7 +21,7 @@ This starts:
 
 #### 2. Load the Development Extension
 
-Instead of using `manifest.json`, load `manifest-dev.json` in your browser:
+Development mode uses `extension/manifest.json` (which points to `content-dev.js`).
 
 **In Chrome/Firefox:**
 
@@ -29,22 +29,16 @@ Instead of using `manifest.json`, load `manifest-dev.json` in your browser:
 - Enable **Developer mode**
 - Click **Load unpacked**
 - Select the `extension/` folder
-- **Important**: Go to extension details and replace `manifest.json` with `manifest-dev.json`
-  - Edit extension: Click the extension folder path
-  - Rename `manifest.json` → `manifest.json.bak`
-  - Rename `manifest-dev.json` → `manifest.json`
+- **Important**: Reload the extension after mode changes.
 
-Or keep both files and toggle:
+To switch active manifest manually (run the same swap when needed):
 
 ```bash
 # In extension/ folder
-# Switch to dev
-ren manifest.json manifest.json.prod
-ren manifest-dev.json manifest.json
-
-# Switch back to production
-ren manifest.json manifest-dev.json
+# Swap manifest.json <-> manifest.json.prod
+ren manifest.json manifest.json.tmp
 ren manifest.json.prod manifest.json
+ren manifest.json.tmp manifest.json.prod
 ```
 
 #### 3. Start Designing
@@ -53,19 +47,19 @@ Edit files in `frontend/src/` and watch changes appear **instantly** in your bro
 
 ### How It Works
 
-| Mode            | File             | Loads From                 | Rebuild Needed?              |
-| --------------- | ---------------- | -------------------------- | ---------------------------- |
-| **Development** | `content-dev.js` | `http://localhost:5173`    | ❌ No - Hot reload           |
-| **Production**  | `content.js`     | `chrome://extension/dist/` | ✅ Yes - Run `npm run build` |
+| Mode            | Manifest             | Script           | Loads From              | Rebuild Needed?              |
+| --------------- | -------------------- | ---------------- | ----------------------- | ---------------------------- |
+| **Development** | `manifest.json`      | `content-dev.js` | `http://localhost:5173` | ❌ No - Hot reload           |
+| **Production**  | `manifest.json.prod` | `content.js`     | `extension/dist/*`      | ✅ Yes - Run `npm run build` |
 
 ### File Structure
 
 ```
 extension/
-├── manifest.json          ← Production manifest
-├── manifest-dev.json      ← Development manifest (loads from localhost)
-├── content.js             ← Production script
-├── content-dev.js         ← Development script (loads from dev server)
+├── manifest.json          ← Active manifest (dev by default)
+├── manifest.json.prod     ← Production manifest template
+├── content.js             ← Production script (loads extension/dist)
+├── content-dev.js         ← Development script (loads from localhost:5173)
 frontend/
 ├── vite.config.js         ← Configured for dev server + extension output
 ├── src/
@@ -86,12 +80,17 @@ This generates optimized files in `extension/dist/` ready for distribution.
 
 ### Troubleshooting
 
+### Current UI Behavior
+
+- The **Real Time Detection** toggle controls whether feed badges render.
+- Badge appearance and disappearance both use a 300ms delay.
+
 **Dev server not connecting?**
 
 - Check that `npm run dev` is running in the root folder
 - Ensure Vite is listening on `http://localhost:5173`
 - Check browser console for CORS errors
-- Make sure you're using `manifest-dev.json`, not `manifest.json`
+- Make sure active `manifest.json` points to `content-dev.js`
 
 **Changes not showing up?**
 

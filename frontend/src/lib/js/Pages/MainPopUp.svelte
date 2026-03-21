@@ -3,6 +3,7 @@
   import * as img from "../imageHandler.js";
   import { onState } from "../State.js";
   import { show } from "../State.js";
+  import { claimsCheckedToday } from "../State.js";
 </script>
 
 <Layout>
@@ -63,7 +64,7 @@
             : 'opacity-0'}
              {$show ? 'block' : 'hidden'} transition-all duration-300 ease-in"
         >
-          <p class="text-3xl font-bold">12</p>
+          <p class="text-3xl font-bold">{$claimsCheckedToday}</p>
           <p class="text-sm text-black/60">Claims Checked Today</p>
         </div>
         <p

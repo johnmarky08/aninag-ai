@@ -64,6 +64,12 @@ The extension's `content.js` injects this built app by:
 
 The `manifest.json` declares these files as web-accessible resources so they can be loaded on any webpage.
 
+## Current Behavior Notes
+
+- The popup's **Real Time Detection** toggle (shared Svelte store) controls embedded badge rendering.
+- Embedded badges on feed posts only render while detection is enabled.
+- Badge show and hide both use a 300ms delay to match popup transition timing.
+
 ## Build Workflow
 
 1. Edit components in `src/`
