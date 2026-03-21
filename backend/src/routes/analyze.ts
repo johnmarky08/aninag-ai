@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { analyzeController } from "../controllers/analyzeController.ts";
+import { analyzeTextController } from "../controllers/analyzeTextController.ts";
 
 export const analyzeRouter = Router();
 
-analyzeRouter.post("/", analyzeController);
+analyzeRouter.post("/", analyzeTextController);

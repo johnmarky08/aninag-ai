@@ -1,7 +1,8 @@
 /**
+ * Safely parse a string into JSON, attempting direct parse or extracting the first {...} object.
  *
- * @param s A string that may contain JSON, possibly with extra text around it.
- * @returns The parsed JSON object if successful, or throws an error if parsing fails.
+ * @param s Input string potentially containing JSON
+ * @returns Parsed value or null if input is empty or unparsable
  */
 export function safeJsonParse(s: string): unknown {
   const trimmed = s.trim();

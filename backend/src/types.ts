@@ -15,6 +15,7 @@ export type AnalyzeResponse = {
 export type RawSource = {
   id: string;
   title: string;
+  description: string;
   link: string;
   favicon: string;
   snippet: string;

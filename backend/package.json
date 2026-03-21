@@ -10,16 +10,23 @@
     "start": "node dist/index.js"
   },
   "dependencies": {
+    "@mozilla/readability": "^0.6.0",
     "axios": "^1.13.6",
     "cors": "^2.8.5",
     "dotenv": "^16.6.1",
     "express": "^4.19.2",
+    "jsdom": "^29.0.1",
+    "lodash": "^4.17.23",
+    "sbd": "^1.0.19",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
+    "@types/jsdom": "^28.0.1",
+    "@types/lodash": "^4.17.24",
     "@types/node": "^22.10.2",
+    "@types/sbd": "^1.0.5",
     "tsx": "^4.19.2",
     "typescript": "^5.8.2"
   }

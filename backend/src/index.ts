@@ -2,8 +2,7 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { analyzeRouter } from "./routes/analyze.ts";
-import { notFound } from "./utils/notFound.ts";
-import { errorHandler } from "./utils/errorHandler.ts";
+import { errorHandler, notFound } from "./utils/index.ts";
 
 const app = express();
 
