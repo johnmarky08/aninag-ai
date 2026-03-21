@@ -71,4 +71,4 @@ show.subscribe((value) => {
 export const claimsCheckedToday = createClaimsStore();
 
 // Confidence store for analysis results (0-100)
-export const analysisConfidence = writable(98);
+export const analysisConfidence = writable(50);

@@ -5,22 +5,28 @@ import { svelte } from "@sveltejs/vite-plugin-svelte";
 export default defineConfig({
   plugins: [svelte()],
   server: {
+    host: true,
     port: 5173,
-    strictPort: false,
+    strictPort: true,
     cors: true,
     headers: {
       "Access-Control-Allow-Origin": "*",
     },
   },
   build: {
+    outDir: "../extension/dist",
     emptyOutDir: true,
+    lib: {
+      entry: "src/main.js",
+      formats: ["es"],
+      fileName: () => "assets/index.js",
+      cssFileName: "index",
+    },
     rollupOptions: {
       output: {
-        entryFileNames: "assets/[name].js",
         chunkFileNames: "assets/[name].js",
         assetFileNames: "assets/[name][extname]",
       },
     },
-    outDir: "../extension/dist",
   },
 });

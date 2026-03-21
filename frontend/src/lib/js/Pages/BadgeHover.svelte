@@ -2,10 +2,18 @@
   import { onDestroy } from "svelte";
   import * as img from "../imageHandler.js";
   import { openFullAnalysis, verificationLevel } from "../Utilities.js";
-  import { onState } from "../State.js";
+  import { onState, analysisConfidence } from "../State.js";
 
   let showBadge = false;
   let showBadgeTimeout;
+  let isXPlatform = false;
+
+  // Detect if we're on X/Twitter
+  if (typeof window !== "undefined") {
+    isXPlatform =
+      window.location.hostname.includes("twitter.com") ||
+      window.location.hostname.includes("x.com");
+  }
 
   $: {
     clearTimeout(showBadgeTimeout);
@@ -100,6 +108,7 @@
       <div
         id="contentBg"
         class="z-[2147483647] cursor-default opacity-0 invisible group-hover:visible group-hover:opacity-100 rounded-[10px] border absolute p-5 shadow-[0_12px_30px_rgba(15,23,42,0.18)] space-y-5 -translate-x-52 translate-y-8 transition-all duration-300 ease-in w-[320px] backdrop-blur-[2px] {contentBgClass} {contentBorderClass}"
+        style={isXPlatform ? "transform: translateX(calc(-208px - 5px)) translateY(32px);" : ""}
       >
         <div class="flex justify-between items-center">
           <div
@@ -118,7 +127,9 @@
               {badgeText} Content
             </p>
           </div>
-          <p class="text-[#3A4352] text-sm font-semibold">98% Confidence</p>
+          <p class="text-[#3A4352] text-sm font-semibold">
+            {$analysisConfidence}% Confidence
+          </p>
         </div>
 
         <p id="ContentBadgeText" class="max-w-xs text-[#1F2329] leading-6">

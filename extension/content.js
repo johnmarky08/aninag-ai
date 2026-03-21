@@ -2,6 +2,9 @@ const ROOT_ID = "aninag-ai-root";
 const FB_POST_SELECTOR = '[role="article"]';
 const FB_MESSAGE_SELECTOR = '[data-ad-preview="message"]';
 const FB_BADGE_MOUNT_MARKER = "data-aninag-post-badge-mounted";
+const X_TWEET_SELECTOR = "article";
+const X_TEXT_SELECTOR = '[data-testid="tweetText"]';
+const X_BADGE_MOUNT_MARKER = "data-aninag-tweet-badge-mounted";
 
 function cleanText(value) {
   return (value || "").replace(/\s+/g, " ").trim();
@@ -100,6 +103,80 @@ function initFacebookCollector() {
   );
 }
 
+function collectTwitterPost(article, index) {
+  const textElement = article.querySelector(X_TEXT_SELECTOR);
+  const text = textElement ? cleanText(textElement.textContent) : "";
+
+  const tweetId = article.getAttribute("data-testid") || `x-tweet-${index}`;
+
+  return {
+    id: tweetId,
+    text,
+    platform: "x",
+    collectedAt: new Date().toISOString(),
+    url: location.href,
+  };
+}
+
+function buildTwitterReferences(posts) {
+  const byId = {};
+  const textRefs = [];
+
+  posts.forEach((post, index) => {
+    byId[post.id] = post;
+
+    textRefs.push({ id: post.id, index, text: post.text });
+  });
+
+  return {
+    posts,
+    byId,
+    textRefs,
+    totalPosts: posts.length,
+  };
+}
+
+function scanTwitterPosts() {
+  if (
+    !location.hostname.includes("twitter.com") &&
+    !location.hostname.includes("x.com")
+  ) {
+    return [];
+  }
+
+  const tweets = Array.from(document.querySelectorAll(X_TWEET_SELECTOR));
+  const result = tweets
+    .map((article, index) => collectTwitterPost(article, index))
+    .filter((post) => post.text);
+
+  window.__ANINAG_X_POSTS__ = result;
+  window.__ANINAG_X_REFERENCES__ = buildTwitterReferences(result);
+  return result;
+}
+
+function initTwitterCollector() {
+  if (
+    !location.hostname.includes("twitter.com") &&
+    !location.hostname.includes("x.com")
+  ) {
+    return;
+  }
+
+  scanTwitterPosts();
+  window.aninagScanTwitterPosts = scanTwitterPosts;
+  window.aninagGetTwitterTextReferences = () =>
+    window.__ANINAG_X_REFERENCES__?.textRefs || [];
+  window.aninagGetTwitterPostById = (id) =>
+    window.__ANINAG_X_REFERENCES__?.byId?.[id] || null;
+
+  const observer = new MutationObserver(() => {
+    scanTwitterPosts();
+  });
+
+  observer.observe(document.body, { childList: true, subtree: true });
+  console.log("ANINAG-AI X/Twitter collector ready.");
+}
+
 function mountBadgesOnFacebookMessages(mountApp) {
   if (!location.hostname.includes("facebook.com")) {
     return;
@@ -122,6 +199,40 @@ function mountBadgesOnFacebookMessages(mountApp) {
     mountWrapper.appendChild(mountTarget);
 
     mountScope.prepend(mountWrapper);
+    mountApp(mountTarget, { embedded: true });
+  });
+}
+
+function mountBadgesOnTwitterPosts(mountApp) {
+  if (
+    !location.hostname.includes("twitter.com") &&
+    !location.hostname.includes("x.com")
+  ) {
+    return;
+  }
+
+  document.querySelectorAll(X_TWEET_SELECTOR).forEach((article) => {
+    if (!(article instanceof HTMLElement)) return;
+
+    // Skip comment tweets - check if article is inside a conversation/detail view
+    const mainFeed = article.closest('[role="main"]');
+    if (!mainFeed || mainFeed.querySelector('[data-testid="conversation"]')) {
+      return; // Skip if it's in a conversation thread (likely a comment)
+    }
+
+    if (article.getAttribute(X_BADGE_MOUNT_MARKER) === "true") return;
+    article.setAttribute(X_BADGE_MOUNT_MARKER, "true");
+
+    const mountWrapper = document.createElement("div");
+    mountWrapper.setAttribute("data-aninag-badge-wrapper", "true");
+    mountWrapper.style.cssText =
+      "position:absolute;top:0;right:0;z-index:2147483647;isolation:isolate;overflow:visible;";
+
+    const mountTarget = document.createElement("div");
+    mountWrapper.appendChild(mountTarget);
+
+    article.style.position = "relative";
+    article.prepend(mountWrapper);
     mountApp(mountTarget, { embedded: true });
   });
 }
@@ -176,6 +287,7 @@ async function bootstrapProd() {
     if (typeof mountApp === "function") {
       mountApp(ensureRoot(), { embedded: false });
       mountBadgesOnFacebookMessages(mountApp);
+      mountBadgesOnTwitterPosts(mountApp);
     }
 
     // Expose analyze function globally for post analysis
@@ -184,10 +296,12 @@ async function bootstrapProd() {
     }
 
     initFacebookCollector();
+    initTwitterCollector();
 
     const badgeObserver = new MutationObserver(() => {
       if (typeof mountApp === "function") {
         mountBadgesOnFacebookMessages(mountApp);
+        mountBadgesOnTwitterPosts(mountApp);
       }
     });
     badgeObserver.observe(document.body, { childList: true, subtree: true });

@@ -3,23 +3,42 @@ REM Quick toggle between dev and production manifests
 
 if "%1"=="dev" (
     echo Switching to DEV MODE...
-    if exist manifest.json ren manifest.json manifest.prod.json
-    if exist manifest-dev.json ren manifest-dev.json manifest.json
-    if exist content.js ren content.js content.prod.js
-    if exist content-dev.js ren content-dev.js content.js
+    > manifest.json (
+        echo {
+        echo   "manifest_version": 3,
+        echo   "name": "ANINAG AI [DEV]",
+        echo   "version": "1.0",
+        echo   "description": "Floating Svelte panel (Development Mode)",
+        echo   "permissions": ["scripting"],
+        echo   "content_scripts": [
+        echo     {
+        echo       "matches": ["<all_urls>"],
+        echo       "js": ["content-dev.js"]
+        echo     }
+        echo   ],
+        echo   "web_accessible_resources": [
+        echo     {
+        echo       "resources": ["dist/assets/*", "dist/index.html"],
+        echo       "matches": ["<all_urls>"]
+        echo     }
+        echo   ]
+        echo }
+    )
     echo ✓ switched to DEV mode. Reload extension in browser.
 ) else if "%1"=="prod" (
     echo Switching to PRODUCTION MODE...
-    if exist manifest.json ren manifest.json manifest-dev.json
-    if exist manifest.prod.json ren manifest.prod.json manifest.json
-    if exist content.js ren content.js content-dev.js
-    if exist content.prod.js ren content.prod.js content.js
+    if not exist manifest.json.prod (
+        echo ✗ Missing manifest.json.prod. Cannot switch to production.
+        exit /b 1
+    )
+    copy /Y manifest.json.prod manifest.json >nul
     echo ✓ Switched to PRODUCTION mode. Run 'npm run build' first.
 ) else if "%1"=="status" (
-    if exist manifest-dev.json (
-        echo Status: PRODUCTION mode (manifest.json is active^)
+    findstr /L /C:"[DEV]" manifest.json >nul
+    if errorlevel 1 (
+        echo Status: PRODUCTION mode
     ) else (
-        echo Status: DEVELOPMENT mode (manifest-dev.json is active^)
+        echo Status: DEVELOPMENT mode
     )
 ) else (
     echo.
