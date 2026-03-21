@@ -2,8 +2,13 @@ import { mount } from "svelte";
 import "./app.css";
 import App from "./App.svelte";
 
-const app = mount(App, {
-  target: document.getElementById("aninag-ai-root"),
-});
+export function mountApp(target, props = {}) {
+  if (!target) return null;
 
-export default app;
+  return mount(App, {
+    target,
+    props,
+  });
+}
+
+export default mountApp;

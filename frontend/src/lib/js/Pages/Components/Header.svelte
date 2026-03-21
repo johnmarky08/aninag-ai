@@ -12,16 +12,20 @@
     <img
       src={$onState ? img.aninagLogo : img.aninagLogoOff}
       alt="AninagLogo"
-      class="{$onState
-        ? 'size-auto'
-        : 'size-10'} transition-all duration-300 ease-in-out"
+      on:error={(event) => {
+        const target = event.currentTarget;
+        if (target instanceof HTMLImageElement) {
+          target.src = img.aninagLogoOff;
+        }
+      }}
+      class="transition-all duration-300 ease-in-out"
     />
   </div>
   <div>
     <div class="flex justify-between items-center">
       <p class="text-lg font-bold">ANINAG</p>
       <button on:click={() => ($minimize = !$minimize)} aria-label="Minimize">
-        <svg  
+        <svg
           class="cursor-pointer"
           xmlns="http://www.w3.org/2000/svg"
           width="24"

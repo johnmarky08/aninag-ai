@@ -67,7 +67,7 @@
           <p class="text-sm text-black/60">Claims Checked Today</p>
         </div>
         <p
-          class="text-center text-black/60
+          class="text-center text-lg text-black/60
         {$onState ? 'opacity-0' : 'opacity-100'}
          {$show ? 'hidden' : 'block'} transition-all duration-300 ease-in"
         >
@@ -87,7 +87,7 @@
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <g clip-path="url(#clip0_54_1580)">
+            <clip-path clip-path="url(#clip0_54_1580)">
               <path
                 d="M6 11C8.76142 11 11 8.76142 11 6C11 3.23858 8.76142 1 6 1C3.23858 1 1 3.23858 1 6C1 8.76142 3.23858 11 6 11Z"
                 stroke="#6A7181"
@@ -106,7 +106,7 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
               />
-            </g>
+            </clip-path>
             <defs>
               <clipPath id="clip0_54_1580">
                 <rect width="12" height="12" fill="white" />
@@ -157,14 +157,16 @@
 
           <p class="font-semibold">Developer Info</p>
         </div>
-        <p>ANINAG Research Team — UP Diliman · v1.2.</p>
+        <p>ANINAG Dev Team — LSPU · v1.2.</p>
       </div>
       <button
-        class="flex items-center bg-[#19454C] rounded-[10px]
+        class="group flex items-center rounded-[10px] border border-[#19454C] bg-[#19454C]
          text-white text-md font-medium gap-2 p-3 justify-center cursor-pointer w-full
+         hover:bg-[#25616B] hover:border-[#25616B] active:bg-[#12343A] active:border-[#12343A]
+         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#29A37A]/50
          {$onState
           ? '-translate-y-0'
-          : '-translate-y-[135px]'} transition-transform duration-300 ease-in"
+          : '-translate-y-[135px]'} transition-all duration-300 ease-in"
       >
         <svg
           width="15"
@@ -175,28 +177,28 @@
         >
           <path
             d="M5.625 1.875H2.5C2.15482 1.875 1.875 2.15482 1.875 2.5V6.875C1.875 7.22018 2.15482 7.5 2.5 7.5H5.625C5.97018 7.5 6.25 7.22018 6.25 6.875V2.5C6.25 2.15482 5.97018 1.875 5.625 1.875Z"
-            stroke="white"
+            stroke="currentColor"
             stroke-width="1.25"
             stroke-linecap="round"
             stroke-linejoin="round"
           />
           <path
             d="M12.5 1.875H9.375C9.02982 1.875 8.75 2.15482 8.75 2.5V4.375C8.75 4.72018 9.02982 5 9.375 5H12.5C12.8452 5 13.125 4.72018 13.125 4.375V2.5C13.125 2.15482 12.8452 1.875 12.5 1.875Z"
-            stroke="white"
+            stroke="currentColor"
             stroke-width="1.25"
             stroke-linecap="round"
             stroke-linejoin="round"
           />
           <path
             d="M12.5 7.5H9.375C9.02982 7.5 8.75 7.77982 8.75 8.125V12.5C8.75 12.8452 9.02982 13.125 9.375 13.125H12.5C12.8452 13.125 13.125 12.8452 13.125 12.5V8.125C13.125 7.77982 12.8452 7.5 12.5 7.5Z"
-            stroke="white"
+            stroke="currentColor"
             stroke-width="1.25"
             stroke-linecap="round"
             stroke-linejoin="round"
           />
           <path
             d="M5.625 10H2.5C2.15482 10 1.875 10.2798 1.875 10.625V12.5C1.875 12.8452 2.15482 13.125 2.5 13.125H5.625C5.97018 13.125 6.25 12.8452 6.25 12.5V10.625C6.25 10.2798 5.97018 10 5.625 10Z"
-            stroke="white"
+            stroke="currentColor"
             stroke-width="1.25"
             stroke-linecap="round"
             stroke-linejoin="round"
@@ -214,21 +216,21 @@
         >
           <path
             d="M8.125 1.625H11.375V4.875"
-            stroke="white"
+            stroke="currentColor"
             stroke-width="1.08333"
             stroke-linecap="round"
             stroke-linejoin="round"
           />
           <path
             d="M5.41675 7.58333L11.3751 1.625"
-            stroke="white"
+            stroke="currentColor"
             stroke-width="1.08333"
             stroke-linecap="round"
             stroke-linejoin="round"
           />
           <path
             d="M9.75 7.04167V10.2917C9.75 10.579 9.63586 10.8545 9.4327 11.0577C9.22953 11.2609 8.95398 11.375 8.66667 11.375H2.70833C2.42102 11.375 2.14547 11.2609 1.9423 11.0577C1.73914 10.8545 1.625 10.579 1.625 10.2917V4.33333C1.625 4.04602 1.73914 3.77047 1.9423 3.5673C2.14547 3.36414 2.42102 3.25 2.70833 3.25H5.95833"
-            stroke="white"
+            stroke="currentColor"
             stroke-width="1.08333"
             stroke-linecap="round"
             stroke-linejoin="round"
