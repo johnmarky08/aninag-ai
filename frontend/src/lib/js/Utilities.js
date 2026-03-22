@@ -1,6 +1,6 @@
 import { writable, get } from "svelte/store";
 
-export const verificationLevel = writable("Verified");
+export const verificationLevel = writable("Flagged");
 
 // Draggable logic
 const PANEL_WIDTH = 400;

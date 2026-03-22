@@ -1,14 +1,14 @@
 {
   "manifest_version": 3,
-  "name": "ANINAG AI [DEV]",
+  "name": "ANINAG AI",
   "version": "1.0",
-  "description": "Floating Svelte panel (Development Mode)",
+  "description": "Floating Svelte panel",
   "permissions": ["scripting"],
   "host_permissions": ["<all_urls>"],
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["content-dev.js"]
+      "js": ["content.js"]
     }
   ],
   "web_accessible_resources": [
