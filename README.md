@@ -78,10 +78,15 @@ The frontend uses Vite to build a Svelte app that gets injected into webpages vi
 
 ### Backend (`backend/.env`)
 
+- `PORT` - Backend server port (default: `3001`)
 - `HF_API_KEY` - Hugging Face API key
 - `HF_BASE_URL` - Hugging Face API endpoint (default: `https://router.huggingface.co/v1`)
+- `HF_ST_ML_MODEL_URL` - Sentence similarity model URL (default: `https://router.huggingface.co/hf-inference/models/sentence-transformers/all-MiniLM-L6-v2/pipeline/sentence-similarity`)
 - `HF_MODEL` - LLM model name (default: `Qwen/Qwen2.5-7B-Instruct`)
-- `LLM_DEBUG` - Enable LLM debug logs (`1` to enable)
+- `SERP_API_BASE_URL` - Serp API endpoint (default: `https://serpapi.com/search`)
+- `SERP_API_KEY` - Serp API key for search results
+- `CACHE_TTL_MS` - Cache time-to-live in milliseconds (default: `900000`)
+- `DEBUG` - Enable LLM debug logs (`true` to enable)
 
 ## Extension Configuration
 
