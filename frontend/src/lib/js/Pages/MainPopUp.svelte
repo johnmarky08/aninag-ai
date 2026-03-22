@@ -29,7 +29,7 @@
     <!-- container div -->
     <div
       class="space-y-5 {$onState
-        ? ''
+        ? 'h-[405px]'
         : 'h-[260px]'} transition-all duration-300 ease-in overflow-hidden"
     >
       <div

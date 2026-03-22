@@ -2540,7 +2540,7 @@ function va(e, t) {
 			fi(R(S), "clip-path", "url(#clip0_54_1580)"), je(), k(S), je(2), k(x), je(8), k(b);
 			var ee = z(b, 2);
 			k(o), k(a), On(() => {
-				$(o, 1, `space-y-5 ${n() ? "" : "h-[260px]"} transition-all duration-300 ease-in overflow-hidden`), $(s, 1, `flex gap-2 items-center border
+				$(o, 1, `space-y-5 ${n() ? "h-[400px]" : "h-[260px]"} transition-all duration-300 ease-in overflow-hidden`), $(s, 1, `flex gap-2 items-center border
          rounded-[10px] p-2
          ${n() ? " bg-[#29A37A]/10 border-[#29A37A]" : "bg-[#F3F4F6] border-[#F3F4F6]"} transition-all duration-300 ease-in`), di(l, "src", n() ? $i : ea), di(l, "alt", n() ? "Active" : "Paused"), $(u, 1, `text-md ${n() ? "text-[#29A37A]" : "text-[#6A7181]"}`), Q(d, n() ? "Active: Scanning Fee" : "Paused: Not Scanning"), $(p, 1, `flex rounded-full w-12 h-7 bg-[#29A37A] items-center justify-start px-0.5 transition-all duration-300 ease-in ${n() ? " bg-[#29A37A] " : " bg-gray-300 "} `), $(m, 1, `rounded-full w-6 h-6 bg-white
           ${n() ? " translate-x-5 " : " translate-x-0 "}
