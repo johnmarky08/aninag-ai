@@ -80,14 +80,18 @@
       ? "#29A37A"
       : $verificationLevel === "Likely Misleading"
         ? "#F5DD0A"
-        : "#E21D48";
+        : $verificationLevel === "Likely Misleading"
+          ? "#E21D48"
+          : "#9CA3AF";
 
   $: badgeText =
     $verificationLevel === "Verified"
       ? "Verified"
       : $verificationLevel === "Likely Misleading"
         ? "Likely Misleading"
-        : "Fake";
+        : $verificationLevel === "Fake"
+          ? "Fake"
+          : "Unknown";
 
   $: ctaHoverClass =
     $verificationLevel === "Verified"
@@ -148,7 +152,9 @@
                 ? img.sheild
                 : $verificationLevel == "Likely Misleading"
                   ? img.warningYellow
-                  : img.warningRed}
+                  : $verificationLevel == "Fake"
+                    ? img.warningRed
+                    : img.shellShield}
               alt="Active"
             />
             <p id="ContentBadge" class="text-md {accentTextClass}">
@@ -161,7 +167,9 @@
         </div>
 
         <p id="ContentBadgeText" class="max-w-xs text-[#1F2329] leading-6">
-          {$analysis ? $analysis?.validated_summary : "Analyzing content..."}
+          {$analysis
+            ? $analysis?.validated_summary
+            : "Analyzing content... Please wait."}
         </p>
         <div>
           <button

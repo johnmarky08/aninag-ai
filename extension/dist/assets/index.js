@@ -2577,9 +2577,9 @@ function ya(e, t) {
 	}), z(() => r(), () => {
 		F(p, r() === "Verified" ? "border-[#BEE9D7]" : r() === "Likely Misleading" ? "border-[#F1DA83]" : "border-[#F5B7C5]");
 	}), z(() => r(), () => {
-		F(m, r() === "Verified" ? "#29A37A" : r() === "Likely Misleading" ? "#F5DD0A" : "#E21D48");
+		F(m, r() === "Verified" ? "#29A37A" : r() === "Likely Misleading" ? "#F5DD0A" : r() === "Likely Misleading" ? "#E21D48" : "#9CA3AF");
 	}), z(() => r(), () => {
-		F(h, r() === "Verified" ? "Verified" : r() === "Likely Misleading" ? "Likely Misleading" : "Fake");
+		F(h, r() === "Verified" ? "Verified" : r() === "Likely Misleading" ? "Likely Misleading" : r() === "Fake" ? "Fake" : "Unknown");
 	}), z(() => r(), () => {
 		F(g, r() === "Verified" ? "hover:bg-[#29A37A] hover:text-white" : r() === "Likely Misleading" ? "hover:bg-[#F5DD0A] hover:text-[#1F2329]" : r() === "Fake" ? "hover:bg-[#E21D48] hover:text-white" : "");
 	}), z(() => r(), () => {
@@ -2602,7 +2602,7 @@ function ya(e, t) {
 		D(ie);
 		var oe = R(ie, 2), se = L(oe);
 		D(oe), D(m), D(n), D(t), B(() => {
-			$(i, 1, `cursor-pointer flex gap-1 w-28 text-sm font-bold rounded-[30px] py-1 px-6 justify-center items-center ${J(c) ?? ""} ${J(l) ?? ""}`), ui(o, "src", J(y)), Q(s, ` ${J(h) ?? ""}`), $(m, 1, `z-[2147483647] cursor-default opacity-0 invisible group-hover:visible group-hover:opacity-100 rounded-[10px] border absolute p-5 shadow-[0_12px_30px_rgba(15,23,42,0.18)] space-y-5 -translate-x-52 translate-y-8 transition-all duration-300 ease-in w-[320px] backdrop-blur-[2px] ${J(f) ?? ""} ${J(p) ?? ""}`), oi(m, J(ee) ? "transform: translateX(calc(-208px - 5px)) translateY(32px);" : ""), ui(S, "src", (r(), cr(ia), Y(() => r() == "Verified" ? Qi : r() == "Likely Misleading" ? na : ra))), $(C, 1, `text-md ${J(u) ?? ""}`), Q(te, `${J(h) ?? ""} Content`), Q(re, `${J(v) ?? ""} Confidence`), Q(ae, (a(), Y(() => a() ? a()?.validated_summary : "Analyzing content..."))), se.disabled = !J(_), $(se, 1, `p-2 flex w-40 border-2 rounded-[10px] items-center justify-center gap-2 transition-all duration-300 ${J(d) ?? ""} ${J(u) ?? ""} ${J(g) ?? ""} ${J(_) ? "" : "opacity-60 cursor-not-allowed pointer-events-none"}`);
+			$(i, 1, `cursor-pointer flex gap-1 w-28 text-sm font-bold rounded-[30px] py-1 px-6 justify-center items-center ${J(c) ?? ""} ${J(l) ?? ""}`), ui(o, "src", J(y)), Q(s, ` ${J(h) ?? ""}`), $(m, 1, `z-[2147483647] cursor-default opacity-0 invisible group-hover:visible group-hover:opacity-100 rounded-[10px] border absolute p-5 shadow-[0_12px_30px_rgba(15,23,42,0.18)] space-y-5 -translate-x-52 translate-y-8 transition-all duration-300 ease-in w-[320px] backdrop-blur-[2px] ${J(f) ?? ""} ${J(p) ?? ""}`), oi(m, J(ee) ? "transform: translateX(calc(-208px - 5px)) translateY(32px);" : ""), ui(S, "src", (r(), cr(ia), Y(() => r() == "Verified" ? Qi : r() == "Likely Misleading" ? na : r() == "Fake" ? ra : $i))), $(C, 1, `text-md ${J(u) ?? ""}`), Q(te, `${J(h) ?? ""} Content`), Q(re, `${J(v) ?? ""} Confidence`), Q(ae, (a(), Y(() => a() ? a()?.validated_summary : "Analyzing content... Please wait."))), se.disabled = !J(_), $(se, 1, `p-2 flex w-40 border-2 rounded-[10px] items-center justify-center gap-2 transition-all duration-300 ${J(d) ?? ""} ${J(u) ?? ""} ${J(g) ?? ""} ${J(_) ? "" : "opacity-60 cursor-not-allowed pointer-events-none"}`);
 		}), gr("click", se, _i(() => J(_) && Yi())), Z(e, t);
 	};
 	Mr(te, (e) => {
