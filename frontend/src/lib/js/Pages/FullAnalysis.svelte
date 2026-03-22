@@ -59,7 +59,7 @@
   <div
     in:fly={{ x: 500, duration: 500, easing: myEasing }}
     out:fly={{ x: 500, duration: 500, easing: myEasing }}
-    class="fixed top-0 right-0 z-[2147483647] w-[min(640px,100vw)] h-screen border-2 border-r-0 rounded-r-none rounded-l-[25px] border-white bg-white shadow overflow-y-scroll overflow-x-hidden scroll-smooth"
+    class="fixed top-0 right-0 z-[2147483647] w-[min(640px,100vw)] h-screen border-2 border-r-0 rounded-r-none rounded-l-[25px] border-white bg-white shadow overflow-y-scroll overflow-x-hidden scroll-smooth custom-scrollbar"
     id="FullAnalysis bg-[#F7F8FA]"
     bind:this={fullAnalysisEl}
   >
@@ -127,36 +127,6 @@
 
       <section class="rounded-2xl border border-[#E2E8F0] bg-white p-3">
         <div class="flex items-start gap-1">
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <g clip-path="url(#clip0_54_1718)">
-              <path
-                d="M7.99998 14.6667C11.6819 14.6667 14.6666 11.6819 14.6666 8.00004C14.6666 4.31814 11.6819 1.33337 7.99998 1.33337C4.31808 1.33337 1.33331 4.31814 1.33331 8.00004C1.33331 11.6819 4.31808 14.6667 7.99998 14.6667Z"
-                stroke="#3380CC"
-                stroke-width="1.33333"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M8 4V8L10.6667 9.33333"
-                stroke="#3380CC"
-                stroke-width="1.33333"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </g>
-            <defs>
-              <clipPath id="clip0_54_1718">
-                <rect width="16" height="16" fill="white" />
-              </clipPath>
-            </defs>
-          </svg>
-
           <div>
             <h3 class="text-lg font-semibold text-[#1F2329]">
               Narrative Context
@@ -170,12 +140,14 @@
 
       <section class="space-y-2.5">
         <h2 class="text-lg font-semibold text-[#1F2329]">Trusted Sources</h2>
-        <div class="space-y-3 overflow-y-scroll scroll-smooth max-h-64">
+        <div
+          class="space-y-3 overflow-y-scroll scroll-smooth max-h-64 custom-scrollbar"
+        >
           {#each $analysis.sources as { title, description, link, bias, snippet }, idx}
             <div
               class="rounded-2xl border border-[#E2E8F0] bg-white p-3 overflow-hidden transition-all duration-300 ease-in {activeDropdown ===
               idx
-                ? 'max-h-64 overflow-y-scroll scroll-smooth'
+                ? 'max-h-64 overflow-y-scroll scroll-smooth no-scrollbar'
                 : 'max-h-[76px]'}"
             >
               <div class="flex items-start justify-between gap-4">
@@ -249,34 +221,6 @@
                             class="inline-flex items-center gap-1 text-xs text-[#2D86E5] underline underline-offset-2 transition-opacity hover:opacity-80"
                           >
                             {link}
-                            <svg
-                              class="h-3.5 w-3.5"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M14 5H19V10"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                              />
-                              <path
-                                d="M10 14L19 5"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                              />
-                              <path
-                                d="M19 14V19H5V5H10"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                              />
-                            </svg>
                           </a>
                         </div>
                       </div>
