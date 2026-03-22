@@ -1,12 +1,25 @@
 <script>
   import { onDestroy } from "svelte";
   import * as img from "../imageHandler.js";
-  import { openFullAnalysis, verificationLevel } from "../Utilities.js";
-  import { onState, analysisConfidence, analysis } from "../State.js";
+  import { openFullAnalysis } from "../Utilities.js";
+  import { onState } from "../State.js";
+  import {
+    analyzeBadgePost,
+    getBadgeStateStore,
+    syncBadgeToGlobal,
+  } from "../context/badgeContext.js";
+
+  export let embedded = false;
+  export let postId = "";
+  export let postText = "";
 
   let showBadge = false;
   let showBadgeTimeout;
   let isXPlatform = false;
+  let isHoverAnalyzing = false;
+
+  $: resolvedPostId = postId || "badge-global";
+  $: badgeStore = getBadgeStateStore(resolvedPostId, postText);
 
   // Detect if we're on X/Twitter
   if (typeof window !== "undefined") {
@@ -19,7 +32,7 @@
     clearTimeout(showBadgeTimeout);
 
     showBadgeTimeout = setTimeout(() => {
-      showBadge = $onState;
+      showBadge = embedded ? true : $onState;
     }, 300);
   }
 
@@ -27,99 +40,116 @@
     clearTimeout(showBadgeTimeout);
   });
 
+  async function handleBadgeMouseEnter() {
+    if (isHoverAnalyzing || !postText?.trim()) return;
+    isHoverAnalyzing = true;
+    await analyzeBadgePost(resolvedPostId, postText);
+    isHoverAnalyzing = false;
+  }
+
+  function openAnalysisForCurrentBadge() {
+    syncBadgeToGlobal(resolvedPostId);
+    openFullAnalysis();
+  }
+
+  $: currentVerdict = $badgeStore?.verdict || "Unknown";
+  $: currentConfidence = $badgeStore?.confidence ?? 0;
+  $: currentSummary = $badgeStore?.validatedSummary || "Analyzing Post...";
+  $: isAnalyzingState = Boolean($badgeStore?.isAnalyzing);
+
   $: badgeBgClass =
-    $verificationLevel === "Verified"
+    currentVerdict === "Verified"
       ? "bg-[#29A37A]"
-      : $verificationLevel === "Likely Misleading"
+      : currentVerdict === "Likely Misleading"
         ? "bg-[#F5DD0A]"
-        : $verificationLevel === "Fake"
+        : currentVerdict === "Fake"
           ? "bg-[#E21D48]"
           : "bg-[#9CA3AF]";
 
   $: badgeTextColorClass =
-    $verificationLevel === "Likely Misleading"
-      ? "text-[#1F2329]"
-      : "text-white";
+    currentVerdict === "Likely Misleading" ? "text-[#1F2329]" : "text-white";
 
   $: accentTextClass =
-    $verificationLevel === "Verified"
+    currentVerdict === "Verified"
       ? "text-[#29A37A]"
-      : $verificationLevel === "Likely Misleading"
+      : currentVerdict === "Likely Misleading"
         ? "text-[#F5DD0A]"
-        : $verificationLevel === "Fake"
+        : currentVerdict === "Fake"
           ? "text-[#E21D48]"
           : "text-[#4B5563]";
 
   $: accentBorderClass =
-    $verificationLevel === "Verified"
+    currentVerdict === "Verified"
       ? "border-[#29A37A]"
-      : $verificationLevel === "Likely Misleading"
+      : currentVerdict === "Likely Misleading"
         ? "border-[#F5DD0A]"
-        : $verificationLevel === "Fake"
+        : currentVerdict === "Fake"
           ? "border-[#E21D48]"
           : "border-[#9CA3AF]";
 
   $: contentBgClass =
-    $verificationLevel === "Verified"
+    currentVerdict === "Verified"
       ? "bg-[#EAF8F2]"
-      : $verificationLevel === "Likely Misleading"
+      : currentVerdict === "Likely Misleading"
         ? "bg-[#FFF7D6]"
-        : $verificationLevel === "Fake"
+        : currentVerdict === "Fake"
           ? "bg-[#FDECEF]"
           : "bg-[#F3F4F6]";
 
   $: contentBorderClass =
-    $verificationLevel === "Verified"
+    currentVerdict === "Verified"
       ? "border-[#BEE9D7]"
-      : $verificationLevel === "Likely Misleading"
+      : currentVerdict === "Likely Misleading"
         ? "border-[#F1DA83]"
-        : "border-[#F5B7C5]";
+        : currentVerdict === "Fake"
+          ? "border-[#F5B7C5]"
+          : "border-[#D1D5DB]";
 
   $: accentStroke =
-    $verificationLevel === "Verified"
+    currentVerdict === "Verified"
       ? "#29A37A"
-      : $verificationLevel === "Likely Misleading"
+      : currentVerdict === "Likely Misleading"
         ? "#F5DD0A"
-        : $verificationLevel === "Likely Misleading"
+        : currentVerdict === "Fake"
           ? "#E21D48"
           : "#9CA3AF";
 
   $: badgeText =
-    $verificationLevel === "Verified"
+    currentVerdict === "Verified"
       ? "Verified"
-      : $verificationLevel === "Likely Misleading"
+      : currentVerdict === "Likely Misleading"
         ? "Likely Misleading"
-        : $verificationLevel === "Fake"
+        : currentVerdict === "Fake"
           ? "Fake"
           : "Unknown";
 
   $: ctaHoverClass =
-    $verificationLevel === "Verified"
+    currentVerdict === "Verified"
       ? "hover:bg-[#29A37A] hover:text-white"
-      : $verificationLevel === "Likely Misleading"
+      : currentVerdict === "Likely Misleading"
         ? "hover:bg-[#F5DD0A] hover:text-[#1F2329]"
-        : $verificationLevel === "Fake"
+        : currentVerdict === "Fake"
           ? "hover:bg-[#E21D48] hover:text-white"
           : "";
 
-  $: canOpenFullAnalysis = $verificationLevel !== "Unknown";
+  $: canOpenFullAnalysis = currentVerdict !== "Unknown";
 
   $: confidenceDisplay =
-    $verificationLevel === "Unknown" ? "--" : `${$analysisConfidence}%`;
+    currentVerdict === "Unknown" ? "--" : `${currentConfidence}%`;
 
   $: badgeIcon =
-    $verificationLevel === "Verified"
+    currentVerdict === "Verified"
       ? img.whiteShield
-      : $verificationLevel === "Unknown"
+      : currentVerdict === "Unknown"
         ? img.shellShield
         : img.whiteShield;
 
   $: contentIcon =
-    $verificationLevel === "Verified"
+    currentVerdict === "Verified"
       ? img.sheild
-      : $verificationLevel === "Likely Misleading"
+      : currentVerdict === "Likely Misleading"
         ? img.warningYellow
-        : $verificationLevel === "Fake"
+        : currentVerdict === "Fake"
           ? img.warningRed
           : img.shellShield;
 </script>
@@ -129,7 +159,10 @@
     <div class="group relative flex">
       <span
         id="Badge"
-        class="cursor-pointer flex gap-1 w-28 text-sm font-bold rounded-[30px] py-1 px-6 justify-center items-center {badgeBgClass} {badgeTextColorClass}"
+        on:mouseenter={handleBadgeMouseEnter}
+        role="button"
+        tabindex="0"
+        class="cursor-pointer flex gap-1 w-28 text-xs font-bold rounded-[30px] py-1 px-6 justify-center items-center {badgeBgClass} {badgeTextColorClass}"
       >
         <img src={badgeIcon} alt="" />
         {badgeText}
@@ -148,11 +181,11 @@
          rounded-[10px] transition-all duration-300 ease-in"
           >
             <img
-              src={$verificationLevel == "Verified"
+              src={currentVerdict == "Verified"
                 ? img.sheild
-                : $verificationLevel == "Likely Misleading"
+                : currentVerdict == "Likely Misleading"
                   ? img.warningYellow
-                  : $verificationLevel == "Fake"
+                  : currentVerdict == "Fake"
                     ? img.warningRed
                     : img.shellShield}
               alt="Active"
@@ -167,14 +200,12 @@
         </div>
 
         <p id="ContentBadgeText" class="max-w-xs text-[#1F2329] leading-6">
-          {$analysis
-            ? $analysis?.validated_summary
-            : "Analyzing content... Please wait."}
+          {isAnalyzingState ? "Analyzing Post..." : currentSummary}
         </p>
         <div>
           <button
             on:click|stopPropagation={() =>
-              canOpenFullAnalysis && openFullAnalysis()}
+              canOpenFullAnalysis && openAnalysisForCurrentBadge()}
             disabled={!canOpenFullAnalysis}
             class="p-2 flex w-40 border-2 rounded-[10px] items-center justify-center gap-2 transition-all duration-300 {accentBorderClass} {accentTextClass} {ctaHoverClass} {!canOpenFullAnalysis
               ? 'opacity-60 cursor-not-allowed pointer-events-none'

@@ -11,6 +11,29 @@ const X_TWEET_SELECTOR = "article";
 const X_TEXT_SELECTOR = '[data-testid="tweetText"]';
 const X_BADGE_MOUNT_MARKER = "data-aninag-tweet-badge-mounted";
 
+function upsertPostReference(key, post) {
+  if (!post?.id) return;
+
+  const postsKey =
+    key === "facebook" ? "__ANINAG_FB_POSTS__" : "__ANINAG_X_POSTS__";
+  const refsKey =
+    key === "facebook" ? "__ANINAG_FB_REFERENCES__" : "__ANINAG_X_REFERENCES__";
+
+  const posts = Array.isArray(window[postsKey]) ? window[postsKey] : [];
+  const existingIndex = posts.findIndex((item) => item?.id === post.id);
+  if (existingIndex >= 0) {
+    posts[existingIndex] = post;
+  } else {
+    posts.push(post);
+  }
+
+  window[postsKey] = posts;
+  window[refsKey] =
+    key === "facebook"
+      ? buildFacebookReferences(posts)
+      : buildTwitterReferences(posts);
+}
+
 function cleanText(value) {
   return (value || "").replace(/\s+/g, " ").trim();
 }
@@ -187,13 +210,24 @@ function mountBadgesOnFacebookMessages(mountApp) {
     return;
   }
 
-  document.querySelectorAll(FB_MESSAGE_SELECTOR).forEach((messageEl) => {
+  const messageCandidates = document.querySelectorAll(FB_MESSAGE_SELECTOR);
+  const mountCandidates =
+    messageCandidates.length > 0
+      ? messageCandidates
+      : document.querySelectorAll(FB_POST_SELECTOR);
+
+  mountCandidates.forEach((messageEl, index) => {
     if (!(messageEl instanceof HTMLElement)) return;
 
     const mountScope = messageEl.closest(FB_POST_SELECTOR) || messageEl;
     if (!(mountScope instanceof HTMLElement)) return;
     if (mountScope.getAttribute(FB_BADGE_MOUNT_MARKER) === "true") return;
     mountScope.setAttribute(FB_BADGE_MOUNT_MARKER, "true");
+
+    const post = collectFacebookPost(mountScope, index);
+    if (post?.text) {
+      upsertPostReference("facebook", post);
+    }
 
     const mountWrapper = document.createElement("div");
     mountWrapper.setAttribute("data-aninag-badge-wrapper", "true");
@@ -204,7 +238,11 @@ function mountBadgesOnFacebookMessages(mountApp) {
     mountWrapper.appendChild(mountTarget);
 
     mountScope.prepend(mountWrapper);
-    mountApp(mountTarget, { embedded: true });
+    mountApp(mountTarget, {
+      embedded: true,
+      postId: post?.id || `fb-post-${index}`,
+      postText: post?.text || "",
+    });
   });
 }
 
@@ -216,17 +254,19 @@ function mountBadgesOnTwitterPosts(mountApp) {
     return;
   }
 
-  document.querySelectorAll(X_TWEET_SELECTOR).forEach((article) => {
+  document.querySelectorAll(X_TWEET_SELECTOR).forEach((article, index) => {
     if (!(article instanceof HTMLElement)) return;
 
-    // Skip comment tweets - check if article is inside a conversation/detail view
-    const mainFeed = article.closest('[role="main"]');
-    if (!mainFeed || mainFeed.querySelector('[data-testid="conversation"]')) {
-      return; // Skip if it's in a conversation thread (likely a comment)
-    }
+    // Skip replies in conversation threads, but do not skip all feed tweets.
+    if (article.closest('[data-testid="conversation"]')) return;
 
     if (article.getAttribute(X_BADGE_MOUNT_MARKER) === "true") return;
     article.setAttribute(X_BADGE_MOUNT_MARKER, "true");
+
+    const post = collectTwitterPost(article, index);
+    if (post?.text) {
+      upsertPostReference("x", post);
+    }
 
     const mountWrapper = document.createElement("div");
     mountWrapper.setAttribute("data-aninag-badge-wrapper", "true");
@@ -238,7 +278,11 @@ function mountBadgesOnTwitterPosts(mountApp) {
 
     article.style.position = "relative";
     article.prepend(mountWrapper);
-    mountApp(mountTarget, { embedded: true });
+    mountApp(mountTarget, {
+      embedded: true,
+      postId: post?.id || `x-tweet-${index}`,
+      postText: post?.text || "",
+    });
   });
 }
 

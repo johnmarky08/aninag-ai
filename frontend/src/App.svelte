@@ -1,5 +1,7 @@
 <script>
   export let embedded = false;
+  export let postId = "";
+  export let postText = "";
 
   import * as util from "./lib/js/Utilities.js";
   import { posX, posY, minimize } from "./lib/js/Utilities.js";
@@ -10,7 +12,7 @@
 
 {#if embedded}
   <div class="flex justify-end w-full overflow-visible">
-    <BadgeHover />
+    <BadgeHover embedded={true} {postId} {postText} />
   </div>
 {:else}
   <div

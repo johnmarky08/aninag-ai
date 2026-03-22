@@ -98,11 +98,11 @@
           <div class="h-2 w-full rounded-full bg-[#DCE8E3]">
             <div
               style="width: {$analysisConfidence}%"
-              class="h-2 rounded-full {$analysisConfidence >= 70
+              class="h-2 rounded-full {$verificationLevel === 'Verified'
                 ? 'bg-[#2FA47B]'
-                : $analysisConfidence <= 69 && $analysisConfidence >= 40
+                : $verificationLevel === 'Likely Misleading'
                   ? 'bg-[#F5DD0A]'
-                  : $analysisConfidence <= 39 && $analysisConfidence > 0
+                  : $verificationLevel === 'Fake'
                     ? 'bg-[#E21D48]'
                     : 'bg-gray-300/50'} transition-all duration-500 ease-in-out"
             ></div>
@@ -242,44 +242,42 @@
                         <div
                           class="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1"
                         >
-                          {#each link as source}
-                            <a
-                              href={source.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              class="inline-flex items-center gap-1 text-xs text-[#2D86E5] underline underline-offset-2 transition-opacity hover:opacity-80"
+                          <a
+                            href={link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="inline-flex items-center gap-1 text-xs text-[#2D86E5] underline underline-offset-2 transition-opacity hover:opacity-80"
+                          >
+                            {link}
+                            <svg
+                              class="h-3.5 w-3.5"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
                             >
-                              {source.label}
-                              <svg
-                                class="h-3.5 w-3.5"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M14 5H19V10"
-                                  stroke="currentColor"
-                                  stroke-width="2"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                />
-                                <path
-                                  d="M10 14L19 5"
-                                  stroke="currentColor"
-                                  stroke-width="2"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                />
-                                <path
-                                  d="M19 14V19H5V5H10"
-                                  stroke="currentColor"
-                                  stroke-width="2"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                />
-                              </svg>
-                            </a>
-                          {/each}
+                              <path
+                                d="M14 5H19V10"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                              <path
+                                d="M10 14L19 5"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                              <path
+                                d="M19 14V19H5V5H10"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </svg>
+                          </a>
                         </div>
                       </div>
                     </div>

@@ -6,6 +6,14 @@ import { errorHandler, notFound } from "./utils/index.ts";
 
 const app = express();
 
+// Set this early so CORS preflight handled by `cors()` still includes it.
+app.use((req, res, next) => {
+  if (req.headers["access-control-request-private-network"] === "true") {
+    res.setHeader("Access-Control-Allow-Private-Network", "true");
+  }
+  next();
+});
+
 app.use(
   cors({
     origin: true,
@@ -14,6 +22,14 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
+
+app.options("*", (req, res) => {
+  if (req.headers["access-control-request-private-network"] === "true") {
+    res.setHeader("Access-Control-Allow-Private-Network", "true");
+  }
+  res.sendStatus(204);
+});
+
 app.use(express.json());
 
 app.use("/analyze", analyzeRouter);
