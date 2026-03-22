@@ -1,11 +1,8 @@
 <script>
   import { onDestroy } from "svelte";
   import * as img from "../imageHandler.js";
-  import { openFullAnalysis } from "../Utilities.js";
-  import { onState } from "../State.js";
-
-  export let verificationLevel = "Unknown";
-  export let analysisConfidence = 0;
+  import { openFullAnalysis, verificationLevel } from "../Utilities.js";
+  import { onState, analysisConfidence, analysis } from "../State.js";
 
   let showBadge = false;
   let showBadgeTimeout;
@@ -44,21 +41,21 @@
   $: badgeBgClass =
     normalizedLevel === "Verified"
       ? "bg-[#29A37A]"
-      : normalizedLevel === "Flagged"
+      : $verificationLevel === "Likely Misleading"
         ? "bg-[#F5DD0A]"
         : normalizedLevel === "Warning"
           ? "bg-[#E21D48]"
           : "bg-[#9CA3AF]";
 
   $: badgeTextColorClass =
-    normalizedLevel === "Flagged" || normalizedLevel === "Unknown"
+    $verificationLevel === "Likely Misleading"
       ? "text-[#1F2329]"
       : "text-white";
 
   $: accentTextClass =
     normalizedLevel === "Verified"
       ? "text-[#29A37A]"
-      : normalizedLevel === "Flagged"
+      : $verificationLevel === "Likely Misleading"
         ? "text-[#F5DD0A]"
         : normalizedLevel === "Warning"
           ? "text-[#E21D48]"
@@ -67,7 +64,7 @@
   $: accentBorderClass =
     normalizedLevel === "Verified"
       ? "border-[#29A37A]"
-      : normalizedLevel === "Flagged"
+      : $verificationLevel === "Likely Misleading"
         ? "border-[#F5DD0A]"
         : normalizedLevel === "Warning"
           ? "border-[#E21D48]"
@@ -76,7 +73,7 @@
   $: contentBgClass =
     normalizedLevel === "Verified"
       ? "bg-[#EAF8F2]"
-      : normalizedLevel === "Flagged"
+      : $verificationLevel === "Likely Misleading"
         ? "bg-[#FFF7D6]"
         : normalizedLevel === "Warning"
           ? "bg-[#FDECEF]"
@@ -85,34 +82,28 @@
   $: contentBorderClass =
     normalizedLevel === "Verified"
       ? "border-[#BEE9D7]"
-      : normalizedLevel === "Flagged"
+      : $verificationLevel === "Likely Misleading"
         ? "border-[#F1DA83]"
-        : normalizedLevel === "Warning"
-          ? "border-[#F5B7C5]"
-          : "border-[#D1D5DB]";
+        : "border-[#F5B7C5]";
+
+  $: accentStroke =
+    $verificationLevel === "Verified"
+      ? "#29A37A"
+      : $verificationLevel === "Likely Misleading"
+        ? "#F5DD0A"
+        : "#E21D48";
 
   $: badgeText =
     normalizedLevel === "Verified"
       ? "Verified"
-      : normalizedLevel === "Flagged"
-        ? "Flagged"
-        : normalizedLevel === "Warning"
-          ? "Warning"
-          : "Unknown";
-
-  $: contentBadgeText =
-    normalizedLevel === "Verified"
-      ? "Matches official Department of Health statements and current public health advisories"
-      : normalizedLevel === "Flagged"
-        ? "Conflicts with standard medical consensus, but contains partial truths about ginger's soothing properties"
-        : normalizedLevel === "Warning"
-          ? "Debunked by COMELEC and major news networks. No official cancellation has been announced"
-          : "Analyzing Post...";
+      : $verificationLevel === "Likely Misleading"
+        ? "Likely Misleading"
+        : "Fake";
 
   $: ctaHoverClass =
     normalizedLevel === "Verified"
       ? "hover:bg-[#29A37A] hover:text-white"
-      : normalizedLevel === "Flagged"
+      : $verificationLevel === "Likely Misleading"
         ? "hover:bg-[#F5DD0A] hover:text-[#1F2329]"
         : normalizedLevel === "Warning"
           ? "hover:bg-[#E21D48] hover:text-white"
@@ -163,7 +154,14 @@
             class="flex gap-2 items-center
          rounded-[10px] transition-all duration-300 ease-in"
           >
-            <img src={contentIcon} alt="Active" />
+            <img
+              src={$verificationLevel == "Verified"
+                ? img.sheild
+                : $verificationLevel == "Likely Misleading"
+                  ? img.warningYellow
+                  : img.warningRed}
+              alt="Active"
+            />
             <p id="ContentBadge" class="text-md {accentTextClass}">
               {badgeText} Content
             </p>
@@ -174,7 +172,7 @@
         </div>
 
         <p id="ContentBadgeText" class="max-w-xs text-[#1F2329] leading-6">
-          {contentBadgeText}
+          {$analysis.validated_summary}
         </p>
         <div>
           <button
