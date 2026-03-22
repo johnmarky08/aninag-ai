@@ -27,23 +27,12 @@
     clearTimeout(showBadgeTimeout);
   });
 
-  $: normalizedLevel = ["Verified", "Flagged", "Warning", "Unknown"].includes(
-    verificationLevel,
-  )
-    ? verificationLevel
-    : "Unknown";
-
-  $: normalizedConfidence =
-    typeof analysisConfidence === "number" && analysisConfidence >= 0
-      ? Math.min(100, Math.round(analysisConfidence))
-      : 0;
-
   $: badgeBgClass =
-    normalizedLevel === "Verified"
+    $verificationLevel === "Verified"
       ? "bg-[#29A37A]"
       : $verificationLevel === "Likely Misleading"
         ? "bg-[#F5DD0A]"
-        : normalizedLevel === "Warning"
+        : $verificationLevel === "Fake"
           ? "bg-[#E21D48]"
           : "bg-[#9CA3AF]";
 
@@ -53,34 +42,34 @@
       : "text-white";
 
   $: accentTextClass =
-    normalizedLevel === "Verified"
+    $verificationLevel === "Verified"
       ? "text-[#29A37A]"
       : $verificationLevel === "Likely Misleading"
         ? "text-[#F5DD0A]"
-        : normalizedLevel === "Warning"
+        : $verificationLevel === "Fake"
           ? "text-[#E21D48]"
           : "text-[#4B5563]";
 
   $: accentBorderClass =
-    normalizedLevel === "Verified"
+    $verificationLevel === "Verified"
       ? "border-[#29A37A]"
       : $verificationLevel === "Likely Misleading"
         ? "border-[#F5DD0A]"
-        : normalizedLevel === "Warning"
+        : $verificationLevel === "Fake"
           ? "border-[#E21D48]"
           : "border-[#9CA3AF]";
 
   $: contentBgClass =
-    normalizedLevel === "Verified"
+    $verificationLevel === "Verified"
       ? "bg-[#EAF8F2]"
       : $verificationLevel === "Likely Misleading"
         ? "bg-[#FFF7D6]"
-        : normalizedLevel === "Warning"
+        : $verificationLevel === "Fake"
           ? "bg-[#FDECEF]"
           : "bg-[#F3F4F6]";
 
   $: contentBorderClass =
-    normalizedLevel === "Verified"
+    $verificationLevel === "Verified"
       ? "border-[#BEE9D7]"
       : $verificationLevel === "Likely Misleading"
         ? "border-[#F1DA83]"
@@ -94,39 +83,39 @@
         : "#E21D48";
 
   $: badgeText =
-    normalizedLevel === "Verified"
+    $verificationLevel === "Verified"
       ? "Verified"
       : $verificationLevel === "Likely Misleading"
         ? "Likely Misleading"
         : "Fake";
 
   $: ctaHoverClass =
-    normalizedLevel === "Verified"
+    $verificationLevel === "Verified"
       ? "hover:bg-[#29A37A] hover:text-white"
       : $verificationLevel === "Likely Misleading"
         ? "hover:bg-[#F5DD0A] hover:text-[#1F2329]"
-        : normalizedLevel === "Warning"
+        : $verificationLevel === "Fake"
           ? "hover:bg-[#E21D48] hover:text-white"
           : "";
 
-  $: canOpenFullAnalysis = normalizedLevel !== "Unknown";
+  $: canOpenFullAnalysis = $verificationLevel !== "Unknown";
 
   $: confidenceDisplay =
-    normalizedLevel === "Unknown" ? "--" : `${normalizedConfidence}%`;
+    $verificationLevel === "Unknown" ? "--" : `${$analysisConfidence}%`;
 
   $: badgeIcon =
-    normalizedLevel === "Verified"
+    $verificationLevel === "Verified"
       ? img.whiteShield
-      : normalizedLevel === "Unknown"
+      : $verificationLevel === "Unknown"
         ? img.shellShield
         : img.whiteShield;
 
   $: contentIcon =
-    normalizedLevel === "Verified"
+    $verificationLevel === "Verified"
       ? img.sheild
-      : normalizedLevel === "Flagged"
+      : $verificationLevel === "Likely Misleading"
         ? img.warningYellow
-        : normalizedLevel === "Warning"
+        : $verificationLevel === "Fake"
           ? img.warningRed
           : img.shellShield;
 </script>
