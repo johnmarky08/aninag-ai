@@ -29,8 +29,8 @@
     <!-- container div -->
     <div
       class="space-y-5 {$onState
-        ? 'h-96'
-        : 'h-[250px]'} transition-all duration-300 ease-in overflow-hidden"
+        ? ''
+        : 'h-[260px]'} transition-all duration-300 ease-in overflow-hidden"
     >
       <div
         class="flex gap-2 items-center border
@@ -131,8 +131,8 @@
           <p class="font-semibold">Extension Info</p>
         </div>
         <p>
-          ANINAG scans your social media feed in real-time an flags potentially
-          misleading posts.
+          ANINAG AI scans your social media feed in real-time an flags
+          potentially misleading posts.
         </p>
         <div class="flex gap-2 items-center">
           <svg
@@ -171,7 +171,8 @@
 
           <p class="font-semibold">Developer Info</p>
         </div>
-        <p>ANINAG Dev Team — LSPU · v1.2.</p>
+        <p>AREA 68 (++/--) — LSPU-SPCC · v1.0.0</p>
+        <p>InterCICSkwela v2.0 - Batang Techno Hackathon Challenge</p>
       </div>
       <button
         class="group flex items-center rounded-[10px] border border-[#19454C] bg-[#19454C]
@@ -181,6 +182,7 @@
          {$onState
           ? '-translate-y-0'
           : '-translate-y-[135px]'} transition-all duration-300 ease-in"
+        onclick={() => alert("Coming Soon!")}
       >
         <svg
           width="15"

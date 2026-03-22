@@ -23,7 +23,7 @@
   </div>
   <div>
     <div class="flex justify-between items-center">
-      <p class="text-lg font-bold">ANINAG</p>
+      <p class="text-lg font-bold">ANINAG AI</p>
       <button on:click={() => ($minimize = !$minimize)} aria-label="Minimize">
         <svg
           class="cursor-pointer"
