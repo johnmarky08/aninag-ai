@@ -161,7 +161,7 @@
         </div>
 
         <p id="ContentBadgeText" class="max-w-xs text-[#1F2329] leading-6">
-          {$analysis.validated_summary}
+          {$analysis ? $analysis?.validated_summary : "Analyzing content..."}
         </p>
         <div>
           <button
