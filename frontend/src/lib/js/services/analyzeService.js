@@ -30,7 +30,7 @@ export async function analyzePost(text) {
     if (data.confidence !== undefined) {
       // Set confidence percentage (0-100)
       analysisConfidence.set(data.confidence);
-      verificationLevel.set(data.verdict);
+      verificationLevel.set((data.verdict * 100).toString());
       analysis.set(data); // Store full analysis result for UI display
     }
 

@@ -186,44 +186,42 @@
                     >
                       {title}
                     </h3>
-                    {#each bias as tags}
-                      <span
-                        class="inline-flex items-center gap-1 rounded-full border border-[#D8DEE8] bg-[#F6F8FB] px-2 py-0.5 text-[10px] text-[#5C6576]"
+                    <span
+                      class="inline-flex items-center gap-1 rounded-full border border-[#D8DEE8] bg-[#F6F8FB] px-2 py-0.5 text-[10px] text-[#5C6576]"
+                    >
+                      <svg
+                        width="8"
+                        height="8"
+                        viewBox="0 0 8 8"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
                       >
-                        <svg
-                          width="8"
-                          height="8"
-                          viewBox="0 0 8 8"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <g clip-path="url(#clip0_54_1746)">
-                            <path
-                              d="M4.19529 0.861959C4.0703 0.736926 3.90076 0.666664 3.72396 0.666626H1.33329C1.15648 0.666626 0.986912 0.736864 0.861888 0.861888C0.736864 0.986912 0.666626 1.15648 0.666626 1.33329V3.72396C0.666664 3.90076 0.736926 4.0703 0.861959 4.19529L3.76329 7.09663C3.9148 7.24717 4.11971 7.33167 4.33329 7.33167C4.54688 7.33167 4.75179 7.24717 4.90329 7.09663L7.09663 4.90329C7.24717 4.75179 7.33167 4.54688 7.33167 4.33329C7.33167 4.11971 7.24717 3.9148 7.09663 3.76329L4.19529 0.861959Z"
-                              stroke="#6A7181"
-                              stroke-width="0.666667"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                            <path
-                              d="M2.50004 2.66671C2.59209 2.66671 2.66671 2.59209 2.66671 2.50004C2.66671 2.40799 2.59209 2.33337 2.50004 2.33337C2.40799 2.33337 2.33337 2.40799 2.33337 2.50004C2.33337 2.59209 2.40799 2.66671 2.50004 2.66671Z"
-                              fill="#6A7181"
-                              stroke="#6A7181"
-                              stroke-width="0.666667"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </g>
-                          <defs>
-                            <clipPath id="clip0_54_1746">
-                              <rect width="8" height="8" fill="white" />
-                            </clipPath>
-                          </defs>
-                        </svg>
+                        <g clip-path="url(#clip0_54_1746)">
+                          <path
+                            d="M4.19529 0.861959C4.0703 0.736926 3.90076 0.666664 3.72396 0.666626H1.33329C1.15648 0.666626 0.986912 0.736864 0.861888 0.861888C0.736864 0.986912 0.666626 1.15648 0.666626 1.33329V3.72396C0.666664 3.90076 0.736926 4.0703 0.861959 4.19529L3.76329 7.09663C3.9148 7.24717 4.11971 7.33167 4.33329 7.33167C4.54688 7.33167 4.75179 7.24717 4.90329 7.09663L7.09663 4.90329C7.24717 4.75179 7.33167 4.54688 7.33167 4.33329C7.33167 4.11971 7.24717 3.9148 7.09663 3.76329L4.19529 0.861959Z"
+                            stroke="#6A7181"
+                            stroke-width="0.666667"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                          <path
+                            d="M2.50004 2.66671C2.59209 2.66671 2.66671 2.59209 2.66671 2.50004C2.66671 2.40799 2.59209 2.33337 2.50004 2.33337C2.40799 2.33337 2.33337 2.40799 2.33337 2.50004C2.33337 2.59209 2.40799 2.66671 2.50004 2.66671Z"
+                            fill="#6A7181"
+                            stroke="#6A7181"
+                            stroke-width="0.666667"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_54_1746">
+                            <rect width="8" height="8" fill="white" />
+                          </clipPath>
+                        </defs>
+                      </svg>
 
-                        {tags}
-                      </span>
-                    {/each}
+                      {bias}
+                    </span>
                   </div>
                   {#if activeDropdown === idx}
                     <div

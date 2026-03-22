@@ -196,6 +196,9 @@ function mountBadgesOnFacebookMessages(mountApp) {
       "display:flex;justify-content:flex-end;width:100%;overflow:visible;margin:6px 0;position:relative;z-index:2147483647;isolation:isolate;";
 
     const mountTarget = document.createElement("div");
+    mountTarget.onmouseenter = async (e) => {
+      await window.aninagAnalyzePost(messageEl.innerText);
+    };
     mountWrapper.appendChild(mountTarget);
 
     mountScope.prepend(mountWrapper);
@@ -229,6 +232,12 @@ function mountBadgesOnTwitterPosts(mountApp) {
       "position:absolute;top:0;right:0;z-index:2147483647;isolation:isolate;overflow:visible;";
 
     const mountTarget = document.createElement("div");
+    mountTarget.onmouseenter = async (e) => {
+      const textEl = article.querySelector(X_TEXT_SELECTOR);
+      if (textEl) {
+        await window.aninagAnalyzePost(textEl.innerText);
+      }
+    };
     mountWrapper.appendChild(mountTarget);
 
     article.style.position = "relative";
