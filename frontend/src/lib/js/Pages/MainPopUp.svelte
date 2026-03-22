@@ -1,9 +1,27 @@
 <script>
+  import { onDestroy } from "svelte";
   import Layout from "./Components/Layout.svelte";
   import * as img from "../imageHandler.js";
   import { onState } from "../State.js";
   import { show } from "../State.js";
   import { claimsCheckedToday } from "../State.js";
+
+  let showToggleTimeout;
+
+  function handleRealtimeToggle() {
+    const nextOnState = !$onState;
+    $onState = nextOnState;
+
+    clearTimeout(showToggleTimeout);
+    showToggleTimeout = setTimeout(() => {
+      // Keep the text panel visibility aligned with the final toggle state.
+      $show = nextOnState;
+    }, 300);
+  }
+
+  onDestroy(() => {
+    clearTimeout(showToggleTimeout);
+  });
 </script>
 
 <Layout>
@@ -34,12 +52,7 @@
         <p>Real Time Detection</p>
         <button
           aria-label="Button"
-          onclick={() => {
-            $onState = !$onState;
-            setTimeout(() => {
-              $show = !$show;
-            }, 300);
-          }}
+          onclick={handleRealtimeToggle}
           class="flex rounded-full w-12 h-7 bg-[#29A37A] items-center justify-start px-0.5 transition-all duration-300 ease-in {$onState
             ? ' bg-[#29A37A] '
             : ' bg-gray-300 '} "

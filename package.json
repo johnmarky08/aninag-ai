@@ -20,5 +20,8 @@
   "homepage": "https://github.com/johnmarky08/aninag-ai#readme",
   "devDependencies": {
     "concurrently": "^9.2.1"
+  },
+  "dependencies": {
+    "tailwind-scrollbar-hide": "^4.0.0"
   }
 }

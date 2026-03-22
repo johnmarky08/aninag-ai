@@ -30,10 +30,11 @@
 
   $: {
     clearTimeout(showBadgeTimeout);
+    const visibilityDelayMs = embedded ? 300 : 300;
 
     showBadgeTimeout = setTimeout(() => {
-      showBadge = embedded ? true : $onState;
-    }, 300);
+      showBadge = $onState;
+    }, visibilityDelayMs);
   }
 
   onDestroy(() => {
@@ -41,13 +42,14 @@
   });
 
   async function handleBadgeMouseEnter() {
-    if (isHoverAnalyzing || !postText?.trim()) return;
+    if (!$onState || isHoverAnalyzing || !postText?.trim()) return;
     isHoverAnalyzing = true;
     await analyzeBadgePost(resolvedPostId, postText);
     isHoverAnalyzing = false;
   }
 
   function openAnalysisForCurrentBadge() {
+    if (!$onState) return;
     syncBadgeToGlobal(resolvedPostId);
     openFullAnalysis();
   }
