@@ -91,3 +91,11 @@ The frontend uses Vite to build a Svelte app that gets injected into webpages vi
 ## Extension Configuration
 
 The extension is ready to use. All assets are web-accessible and will be injected via `content.js` into every webpage.
+
+## Developers Info
+
+- [Bartolome, Joshua L.](https://www.facebook.com/joshua.bartolome.906) (Frontend)
+- [Boyore, Alezer S.](https://www.facebook.com/yre.alebo) (Designer)
+- [Comendador, Jay Justine R.](https://www.facebook.com/comendador.tine) (AI/ML)
+- [Domingo, Nico Gabriel A.](https://www.facebook.com/nekoo.d6) (Documentation)
+- [Natividad, John Marky A.](https://www.facebook.com/johnmarky.natividad) (Backend)
